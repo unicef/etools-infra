@@ -1,0 +1,15 @@
+[submodule "pmp"]
+	path = pmp
+	url = https://github.com/unicef/etools-partnership-management
+[submodule "travel"]
+	path = travel
+	url = https://github.com/unicef/eToolsTravel2Field
+[submodule "proxy"]
+	path = proxy
+	url = https://github.com/unicef/etools-nginx-proxy
+[submodule "backend"]
+	path = backend
+	url = https://github.com/unicef/etools
+[submodule "dashboard"]
+	path = dashboard
+	url = https://github.com/unicef/etools-dashboard

@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  nginx_proxy:
+    image: unicef/etools-proxy:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      - django
+      - polymer_pmp
+
+  db:
+    image: postgres:9.5
