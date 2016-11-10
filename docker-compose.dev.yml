@@ -18,6 +18,7 @@ services:
     build:
       context: ./db
       dockerfile: ./Dockerfile
+    image: unicef/etools-db:dev
 
   backend:
     environment:
@@ -40,25 +41,25 @@ services:
     build:
       context: ./pmp
       dockerfile: ./Dockerfile
-    image: tivix/etools-pmp:dev
-    volumes:
-      - "./pmp:/code"
+    image: unicef/etools-pmp:dev
+    # volumes:
+    #   - "./pmp:/code"
     command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
 
   dashboard:
     build:
       context: ./pmp
       dockerfile: ./Dockerfile
-    image: tivix/etools-dashboard:dev
-    volumes:
-      - "./dashboard:/code"
+    image: unicef/etools-dashboard:dev
+    # volumes:
+    #   - "./dashboard:/code"
     command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
 
   travel:
     build:
       context: ./travel
       dockerfile: ./Dockerfile
-    image: tivix/etools-travel:dev
-    volumes:
-      - "./travel:/code"
+    image: unicef/etools-travel:dev
+    # volumes:
+    #   - "./travel:/code"
     command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
