@@ -5,7 +5,7 @@ services:
     build:
       context: ./proxy
       dockerfile: ./Dockerfile
-    image: unicef/etools-proxy:dev
+    image: tivixunicef/etools-proxy:dev
     ports:
       - "8080:80"
     depends_on:
@@ -18,7 +18,7 @@ services:
     build:
       context: ./db
       dockerfile: ./Dockerfile
-    image: unicef/etools-db:dev
+    image: tivixunicef/etools-db:dev
 
   backend:
     environment:
@@ -29,7 +29,7 @@ services:
       dockerfile: ./Dockerfile
       args:
         requirements_file: 'local.txt'
-    image: unicef/etools-backend:dev
+    image: tivixunicef/etools-backend:dev
     command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/EquiTrack/manage.py migrate_schemas && python /code/EquiTrack/manage.py runserver 0.0.0.0:8080"
     volumes:
       - ./backend:/code
@@ -41,7 +41,7 @@ services:
     build:
       context: ./pmp
       dockerfile: ./Dockerfile
-    image: unicef/etools-pmp:dev
+    image: tivixunicef/etools-pmp:dev
     # volumes:
     #   - "./pmp:/code"
     command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
@@ -50,7 +50,7 @@ services:
     build:
       context: ./pmp
       dockerfile: ./Dockerfile
-    image: unicef/etools-dashboard:dev
+    image: tivixunicef/etools-dashboard:dev
     # volumes:
     #   - "./dashboard:/code"
     command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
@@ -59,7 +59,7 @@ services:
     build:
       context: ./travel
       dockerfile: ./Dockerfile
-    image: unicef/etools-travel:dev
+    image: tivixunicef/etools-travel:dev
     # volumes:
     #   - "./travel:/code"
     command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
