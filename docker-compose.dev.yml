@@ -7,28 +7,30 @@ services:
       dockerfile: ./Dockerfile
     image: tivixunicef/etools-proxy:dev
     ports:
-      - "8080:80"
+      - "8099:80"
     depends_on:
       - backend
       - pmp
-      - dashboard
-      - travel
+      #- dashboard
+      #- travel
 
   db:
     build:
       context: ./db
       dockerfile: ./Dockerfile
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+      - ./data/backup:/backup
     image: tivixunicef/etools-db:dev
 
   backend:
     environment:
       DATABASE_URL: postgis://postgres:@db:5432/postgres
       DJANGO_SETTINGS_MODULE: EquiTrack.settings.local
+      REQUIREMENTS_FILE: local.txt
     build:
       context: ./backend
       dockerfile: ./Dockerfile
-      args:
-        requirements_file: 'local.txt'
     image: tivixunicef/etools-backend:dev
     command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/EquiTrack/manage.py migrate_schemas && python /code/EquiTrack/manage.py runserver 0.0.0.0:8080"
     volumes:
@@ -44,22 +46,23 @@ services:
     image: tivixunicef/etools-pmp:dev
     # volumes:
     #   - "./pmp:/code"
-    command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
+    #command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
+    command: ["http-server", "/code/build/pmp/bundled"]
 
-  dashboard:
-    build:
-      context: ./pmp
-      dockerfile: ./Dockerfile
-    image: tivixunicef/etools-dashboard:dev
-    # volumes:
-    #   - "./dashboard:/code"
-    command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
-
-  travel:
-    build:
-      context: ./travel
-      dockerfile: ./Dockerfile
-    image: tivixunicef/etools-travel:dev
-    # volumes:
-    #   - "./travel:/code"
-    command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
+#  dashboard:
+#    build:
+#      context: ./pmp
+#      dockerfile: ./Dockerfile
+#    image: tivixunicef/etools-dashboard:dev
+#    # volumes:
+#    #   - "./dashboard:/code"
+#    command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
+#
+#  travel:
+#    build:
+#      context: ./travel
+#      dockerfile: ./Dockerfile
+#    image: tivixunicef/etools-travel:dev
+#    # volumes:
+#    #   - "./travel:/code"
+#    command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
