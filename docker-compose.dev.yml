@@ -26,9 +26,11 @@ services:
       DJANGO_SETTINGS_MODULE: EquiTrack.settings.local
     build:
       context: ./backend
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile-dev
+      args:
+        REQUIREMENTS_FILE: local.txt
     image: tivixunicef/etools-backend:dev
-    command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/EquiTrack/manage.py migrate_schemas && python /code/EquiTrack/manage.py runserver 0.0.0.0:8080"
+    command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/EquiTrack/manage.py migrate_schemas --noinput && python /code/EquiTrack/manage.py runserver 0.0.0.0:8080"
     volumes:
       - ./backend:/code
       - /data
