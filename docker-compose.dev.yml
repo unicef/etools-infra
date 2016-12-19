@@ -58,7 +58,7 @@ services:
   travel:
     build:
       context: ./travel
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile-dev
     image: etoolsdev/etools-travel:dev
     volumes:
       - "./travel:/code"
