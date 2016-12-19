@@ -16,6 +16,9 @@ To start using this please get familiar with git submodules if you haven't used 
  - Run: `fab devup` in the parent folder and wait for it. (this should update your db) ***sometimes db doesn't start first try, `CTRL-C` and run the command again.***
  - To bring migrations up to speed `fab backend_migrations`
  - Subsequent starts can be run with `fab devup:quick`
+ - ***Localhost server should be running on 8082***
+ - To SSH into a web container `fab ssh:backend` (to run `manage.py createsuperuser` or other commands)
+ 
  
 ###***Prod-like environ setup:***
 
