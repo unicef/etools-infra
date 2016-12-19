@@ -7,10 +7,10 @@ services:
       dockerfile: ./Dockerfile
     image: tivixunicef/etools-proxy:dev
     ports:
-      - "8080:80"
+      - "8082:80"
     depends_on:
       - backend
-      #- pmp
+      - pmp
       #- dashboard
       #- travel
 
@@ -30,21 +30,21 @@ services:
       args:
         REQUIREMENTS_FILE: local.txt
     image: tivixunicef/etools-backend:dev
-    command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/EquiTrack/manage.py migrate_schemas --noinput && python /code/EquiTrack/manage.py runserver 0.0.0.0:8080"
+    command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/EquiTrack/manage.py && python /code/EquiTrack/manage.py runserver 0.0.0.0:8080"
     volumes:
       - ./backend:/code
       - /data
     depends_on:
       - db
-#
-#  pmp:
-#    build:
-#      context: ./pmp
-#      dockerfile: ./Dockerfile
-#    image: tivixunicef/etools-pmp:dev
-#    # volumes:
-#    #   - "./pmp:/code"
-#    command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
+
+  pmp:
+    build:
+      context: ./pmp
+      dockerfile: ./Dockerfile-dev
+    image: tivixunicef/etools-pmp:dev
+    volumes:
+      - "./pmp:/code"
+    command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
 #
 #  dashboard:
 #    build:
