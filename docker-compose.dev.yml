@@ -11,14 +11,8 @@ services:
     depends_on:
       - backend
       - pmp
-      #- dashboard
+      - dashboard
       - travel
-
-  db:
-    build:
-      context: ./db
-      dockerfile: ./Dockerfile
-    image: etoolsdev/etools-db:dev
 
   backend:
     environment:
@@ -37,6 +31,14 @@ services:
     depends_on:
       - db
 
+  db:
+    build:
+      context: ./db
+      dockerfile: ./Dockerfile
+    image: etoolsdev/etools-db:dev
+#    volumes:
+#      - './postgres_data:/var/lib/postgresql/data'
+
   pmp:
     build:
       context: ./pmp
@@ -46,14 +48,14 @@ services:
       - "./pmp:/code"
     command: [polymer, serve, -H, 0.0.0.0]
 #
-#  dashboard:
-#    build:
-#      context: ./pmp
-#      dockerfile: ./Dockerfile
-#    image: etoolsdev/etools-dashboard:dev
-#    # volumes:
-#    #   - "./dashboard:/code"
-#    command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-dashboard:dev
+    volumes:
+      - "./dashboard:/code"
+    command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
 #
   travel:
     build:
