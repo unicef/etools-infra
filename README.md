@@ -19,7 +19,42 @@ To start using this please get familiar with git submodules if you haven't used 
  - ***Localhost server should be running on 8082***
  - To SSH into a web container `fab ssh:backend` (to run `manage.py createsuperuser` or other commands)
  
+
+ ```bash
+	fab ssh:backend
+	cd EquiTrack
+	# create super user
+	python manage.py createsuperuser
+
+	# run schema migrations
+	python manage.py migrate_schemas --noinput --schema=public
+
+	# open python shell and reduce the number of countries
+	python manage.py shell
+	from util_scripts import *
+	local_country_keep()
+	quit()
+
+	# run migrations scripts
+	python manage.py migrate_schemas --noinput
+
+	# import currencies data 
+	python manage.py import_exchange_rates
+	
+ ```
+
+ - login to localhost:8082/admin/login edit your user, set country and other stuff, then access frontend apps
  
+ 
+###***Dev Setup on Windows 10 requirements:***
+
+ - Enable Hyper-V (PowerShell opened with Administrator rights: `Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All`)
+ - Install Docker for Windows, stable channel: https://docs.docker.com/docker-for-windows/install/#download-docker-for-windows
+ - Open Docker Settings and add your shared partitions (the one that contains the folder you are gonna install etools)
+ - Install Python 2.7.13 and update your system environment `Path` variable by adding `C:\Python27` and `C:\Python27\Scripts`
+ - Open GitBash/CMD/PowerShell and run `pip install fabric`
+ - Do `Dev Setup` steps to install the project 
+
 ###***Prod-like environ setup:***
 
 Coming soon...
