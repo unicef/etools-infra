@@ -66,3 +66,15 @@ def init(branch='develop'):
     if platform.system() == 'Windows':
         # TODO complain if postgres and/or GDAL are not installed
         pass
+
+def test(app=None):
+    # TODO figure out a better way to do this...
+    local('docker exec -it etoolsinfra_db_1 /usr/bin/psql -d template1 -c '
+          '\'create extension if not exists hstore;\' -U etoolusr')
+    # TODO add flag so caller can indicate --keepdb vs --noinput
+    if app is not None:
+        local('docker exec etoolsinfra_backend_1 python'
+              '  /code/EquiTrack/manage.py test %s.tests --keepdb' % app)
+    else:
+        local('docker exec etoolsinfra_backend_1 python'
+              ' /code/EquiTrack/manage.py test --keepdb')
