@@ -48,7 +48,7 @@ services:
     image: etoolsdev/etools-pmp:dev
     volumes:
       - "./pmp:/code"
-    command: [polymer, serve, -H, 0.0.0.0]
+    command: [polymer, serve, -H, 0.0.0.0, -p, '8080']
 #
   dashboard:
     build:
@@ -57,7 +57,7 @@ services:
     image: etoolsdev/etools-dashboard:dev
     volumes:
       - "./dashboard:/code"
-    command: [polymer, serve, -H, 0.0.0.0]  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
+    command: [polymer, serve, -H, 0.0.0.0, -p, '8080']  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
 #
   travel:
     build:
@@ -66,4 +66,4 @@ services:
     image: etoolsdev/etools-travel:dev
     volumes:
       - "./travel:/code"
-    command: [polymer, serve, -H, 0.0.0.0]
+    command: [polymer, serve, -H, 0.0.0.0, -p, '8080']
