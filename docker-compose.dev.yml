@@ -13,6 +13,7 @@ services:
       - pmp
       - dashboard
       - travel
+    command: bash -c "./docker-entrypoint.sh && nginx -g 'daemon off;'${NX_CONFIG}"
 
   backend:
     environment:
@@ -48,7 +49,7 @@ services:
     image: etoolsdev/etools-pmp:dev
     volumes:
       - "./pmp:/code"
-    command: [polymer, serve, -H, 0.0.0.0, -p, '8080']
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
 #
   dashboard:
     build:

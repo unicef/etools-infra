@@ -9,6 +9,12 @@ def ssh(service):
 def devup(quick=False):
     local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
+def devup_built(quick=False):
+    nginx_config = " -c '/nginx-built.conf'"
+    front_end_command = "node express.js"
+    with shell_env(NX_CONFIG=nginx_config, FE_COMMAND=front_end_command):
+        local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
+
 def backend_migrations():
     local('docker exec etoolsinfra_backend_1 python /code/EquiTrack/manage.py migrate_schemas --noinput')
 
@@ -26,6 +32,9 @@ def debug(quick=False, DEBUG_PORT='51312'):
 def remove_docker_containers():
     local('docker stop $(docker ps -q)')
     local('docker rm $(docker ps -q)')
+
+def stop_docker_containers():
+    local('docker stop $(docker ps -q)')
 
 
 def up(quick=False):
