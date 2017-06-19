@@ -58,7 +58,7 @@ services:
     image: etoolsdev/etools-dashboard:dev
     volumes:
       - "./dashboard:/code"
-    command: [polymer, serve, -H, 0.0.0.0, -p, '8080']  # doesn't have auto-reload yet https://github.com/Polymer/polymer-cli/issues/230
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
 #
   travel:
     build:
@@ -67,4 +67,4 @@ services:
     image: etoolsdev/etools-travel:dev
     volumes:
       - "./travel:/code"
-    command: [polymer, serve, -H, 0.0.0.0, -p, '8080']
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
