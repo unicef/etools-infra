@@ -23,8 +23,6 @@ for DB in template_postgis "$POSTGRES_DB"; do
 		CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder;
 EOSQL
 
-
-
 # this script is runned when the docker container is built
 # it imports the base database structure and create the database for the tests
 
@@ -42,7 +40,7 @@ GRANT ALL PRIVILEGES ON DATABASE etools TO etoolusr;
 EOSQL
 
 echo "*** UPDATING DATABASE ***"
-bzcat $DB_DUMP_LOCATION | nice pg_restore --verbose  -U etoolusr -F t -d etools
+bzcat $DB_DUMP_LOCATION | nice pg_restore -U etoolusr -F t -d etools
 
 echo "*** DATABASE CREATED! ***"
 
