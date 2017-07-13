@@ -13,6 +13,7 @@ services:
       - pmp
       - dashboard
       - travel
+      - ap
     command: bash -c "./docker-entrypoint.sh && nginx -g 'daemon off;'${NX_CONFIG}"
 
   backend:
@@ -68,3 +69,13 @@ services:
     volumes:
       - "./travel:/code"
     command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+
+  ap:
+    build:
+      context: ./ap
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-ap:dev
+    volumes:
+      - "./ap:/code"
+      - "/code/build"
+
