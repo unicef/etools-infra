@@ -1,5 +1,11 @@
 ## eTools backend infrastructure configuration
 
+This repository is meant to help get an etools development environment up and running.
+It is *not* used for any production setup.
+
+The repo is basically a collection of submodules, each of which represents a different docker service
+that is part of etools.
+
 ### Notes:
 
 To start using this please get familiar with git submodules if you haven't used them before:
@@ -19,12 +25,9 @@ To start using this please get familiar with git submodules if you haven't used 
  - Make sure you have dependencies installed
  - Clone the repo: `git clone https://github.com/unicef/etools-infra.git`
  - Setup a virtualenv: `mkvirtualenv --no-site-packages etools`
- - Update submodules: `git submodule update --recursive --remote`
  - Install fabric: `pip install fabric`
+ - Initialize submodules and build front-end javascript: `fab init`
  - Contact the Dev Lead to get your db dump, name it `db1.bz2` and add it to: `./db/`
- - For frontend apps `npm install` and `bower install` first in the local directories:
-   - `git submodule foreach npm install`
-   - run `bower install` in the subdirectories: `dashboard`, `pmp`, and `travel`
  - Run: `fab devup` in the parent folder and wait for it. (this should update your db) ***sometimes db doesn't start first try, `CTRL-C` and run the command again.***
  - To bring migrations up to speed `fab backend_migrations`
  - Subsequent starts can be run with `fab devup:quick`

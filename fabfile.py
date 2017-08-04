@@ -1,7 +1,15 @@
 import platform
 
 from fabric.api import local, env, settings
-from fabric.context_managers import shell_env
+from fabric.context_managers import shell_env, cd
+
+
+APP_SUBMODULE_DIRECTORIES = (
+    'dashboard',
+    'pmp',
+    'travel',
+)
+
 
 def ssh(service):
     local('docker exec -it etoolsinfra_%s_1 /bin/sh' % service)
@@ -40,24 +48,30 @@ def stop_docker_containers():
 def up(quick=False):
     local('docker-compose -f docker-compose.yml up --force-recreate')
 
+
 def _frontend_deps_init():
     # TODO retry after timeouts
-    local('git submodule foreach npm install')
-    local('git submodule foreach bower install')
+    for frontend_app_dir in APP_SUBMODULE_DIRECTORIES:
+        with cd(frontend_app_dir):
+            local('npm install')
+            local('bower install')
+
 
 def _frontend_deps_update():
     # TODO retry after timeouts
-    local('git submodule foreach npm update')
-    local('git submodule foreach bower update')
+    for frontend_app_dir in APP_SUBMODULE_DIRECTORIES:
+        with cd(frontend_app_dir):
+            local('npm update')
+            local('bower update')
+
 
 def _update_submodules(branch='develop'):
     # TODO retry after timeouts
+    # see https://stackoverflow.com/a/18799234/8207 for more information about submodule branch tracking
     local('git submodule sync')
-    local('git submodule update --init --recursive')
-    # proxy has no develop branch, so skip it
-    local('git submodule foreach \'[ "$path" == "proxy" ] || git checkout --force %s\'' % branch)
-    # TODO add something to pull master for proxy... or change to use develop
-    local('git submodule foreach \'[ "$path" == "proxy" ] || git pull origin %s\'' % branch)
+    local('git submodule update --init --recursive --remote')
+    local('git submodule foreach -q --recursive \'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch\'')
+
 
 def update(branch='develop'):
     local('git fetch --all')
