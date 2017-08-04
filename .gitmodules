@@ -10,6 +10,7 @@
 [submodule "backend"]
 	path = backend
 	url = https://github.com/unicef/etools
+	branch = develop
 [submodule "dashboard"]
 	path = dashboard
 	url = https://github.com/unicef/etools-dashboard
