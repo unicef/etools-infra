@@ -17,9 +17,9 @@ To start using this please get familiar with git submodules if you haven't used 
 ### Dev Setup
 
  - Make sure you have dependencies installed
- - Clone the repo: `git clone --recursive https://github.com/unicef/etools-infra.git`
+ - Clone the repo: `git clone https://github.com/unicef/etools-infra.git`
  - Setup a virtualenv: `mkvirtualenv --no-site-packages etools`
- - Set the correct branches you want to work from for each submodule (eg: develop in PMP, staging in backend, etc)
+ - Update submodules: `git submodule update --recursive --remote`
  - Install fabric: `pip install fabric`
  - Contact the Dev Lead to get your db dump, name it `db1.bz2` and add it to: `./db/`
  - For frontend apps `npm install` and `bower install` first in the local directories:
