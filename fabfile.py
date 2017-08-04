@@ -1,7 +1,7 @@
 import platform
 
 from fabric.api import local, env, settings
-from fabric.context_managers import shell_env, cd
+from fabric.context_managers import shell_env, lcd
 
 
 APP_SUBMODULE_DIRECTORIES = (
@@ -52,7 +52,7 @@ def up(quick=False):
 def _frontend_deps_init():
     # TODO retry after timeouts
     for frontend_app_dir in APP_SUBMODULE_DIRECTORIES:
-        with cd(frontend_app_dir):
+        with lcd(frontend_app_dir):
             local('npm install')
             local('bower install')
 
@@ -60,7 +60,7 @@ def _frontend_deps_init():
 def _frontend_deps_update():
     # TODO retry after timeouts
     for frontend_app_dir in APP_SUBMODULE_DIRECTORIES:
-        with cd(frontend_app_dir):
+        with lcd(frontend_app_dir):
             local('npm update')
             local('bower update')
 
