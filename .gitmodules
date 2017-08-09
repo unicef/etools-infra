@@ -1,18 +1,24 @@
 [submodule "pmp"]
 	path = pmp
 	url = https://github.com/unicef/etools-partnership-management
+	branch = develop
 [submodule "travel"]
 	path = travel
 	url = https://github.com/unicef/eToolsTravel2Field
+	branch = develop
 [submodule "proxy"]
 	path = proxy
 	url = https://github.com/unicef/etools-nginx-proxy
+	branch = master
 [submodule "backend"]
 	path = backend
 	url = https://github.com/unicef/etools
+	branch = develop
 [submodule "dashboard"]
 	path = dashboard
 	url = https://github.com/unicef/etools-dashboard
+	branch = develop
 [submodule "ap"]
 	path = ap
 	url = https://github.com/unicef/etools-auditor-portal.git
+	branch = master
