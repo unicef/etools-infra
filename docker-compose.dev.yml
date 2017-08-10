@@ -39,6 +39,8 @@ services:
       context: ./db
       dockerfile: ./Dockerfile
     image: etoolsdev/etools-db:dev
+    ports:
+      - "5432:5432"
 #    volumes:
 #      - './postgres_data:/var/lib/postgresql/data'
 
