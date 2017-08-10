@@ -12,7 +12,17 @@ APP_SUBMODULE_DIRECTORIES = (
 
 
 def ssh(service):
-    local('docker exec -it etoolsinfra_%s_1 /bin/bash' % service)
+    # https://stackoverflow.com/a/25293275/8207
+    class NoBashException(Exception):
+        pass
+
+    with settings(abort_exception=NoBashException):
+        try:
+            local('docker exec -it etoolsinfra_%s_1 /bin/bash' % service)
+        except NoBashException:
+            # fallback in case bash isn't installed
+            local('docker exec -it etoolsinfra_%s_1 /bin/sh' % service)
+
 
 def devup(quick=False):
     local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
