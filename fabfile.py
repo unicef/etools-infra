@@ -83,12 +83,13 @@ def _update_submodules():
     local('git submodule foreach -q --recursive \'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch\'')
 
 
-def update():
+def update(quick=False):
     local('git fetch --all')
     # TODO should we use `develop` on unicef/etools-infra rather than `master`?
     # local('git checkout --force %s' % branch)
     _update_submodules()
-    _frontend_deps_update()
+    if not quick:
+        _frontend_deps_update()
 
 
 def init():
