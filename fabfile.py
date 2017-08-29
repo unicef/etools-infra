@@ -8,6 +8,7 @@ APP_SUBMODULE_DIRECTORIES = (
     'dashboard',
     'pmp',
     'travel',
+    'ap',
 )
 
 
