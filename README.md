@@ -60,7 +60,19 @@ To start using this please get familiar with git submodules if you haven't used 
 
  - login to localhost:8082/admin/login edit your user, set country and other stuff, then access frontend apps
  
- 
+### Getting latest changes
+
+Getting the latest changes should be a two-step process:
+
+```bash
+   fab update
+   fab devup:quick
+```
+
+`fab update` will pull in the latest submodule changes and update all front-end dependencies, which can be slow
+and is not always necessary.
+You can also run `fab update:quick` which will only pull code changes and not update the front-end dependencies.
+
 ### Dev Setup on Windows 10 requirements
 
  - Enable Hyper-V (PowerShell opened with Administrator rights: `Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All`)

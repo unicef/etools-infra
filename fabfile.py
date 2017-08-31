@@ -8,6 +8,7 @@ APP_SUBMODULE_DIRECTORIES = (
     'dashboard',
     'pmp',
     'travel',
+    'ap',
 )
 
 
@@ -75,7 +76,7 @@ def _frontend_deps_update():
             local('bower update')
 
 
-def _update_submodules(branch='develop'):
+def _update_submodules():
     # TODO retry after timeouts
     # see https://stackoverflow.com/a/18799234/8207 for more information about submodule branch tracking
     local('git submodule sync')
@@ -83,18 +84,19 @@ def _update_submodules(branch='develop'):
     local('git submodule foreach -q --recursive \'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch\'')
 
 
-def update(branch='develop'):
+def update(quick=False):
     local('git fetch --all')
     # TODO should we use `develop` on unicef/etools-infra rather than `master`?
     # local('git checkout --force %s' % branch)
-    _update_submodules(branch)
-    _frontend_deps_update()
+    _update_submodules()
+    if not quick:
+        _frontend_deps_update()
 
 
-def init(branch='develop'):
+def init():
     local('git fetch --all')
 
-    _update_submodules(branch)
+    _update_submodules()
     _frontend_deps_init()
 
     if platform.system() == 'Darwin':
