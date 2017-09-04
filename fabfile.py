@@ -81,7 +81,7 @@ def _update_submodules():
     # see https://stackoverflow.com/a/18799234/8207 for more information about submodule branch tracking
     local('git submodule sync')
     local('git submodule update --init --recursive --remote')
-    local('git submodule foreach -q --recursive \'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch\'')
+    local('git submodule foreach -q --recursive \'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch; git merge origin/$branch\'')
 
 
 def update(quick=False):
