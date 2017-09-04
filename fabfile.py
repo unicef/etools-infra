@@ -87,7 +87,7 @@ def _update_submodules():
 def update(quick=False):
     local('git fetch --all')
     # TODO should we use `develop` on unicef/etools-infra rather than `master`?
-    # local('git checkout --force %s' % branch)
+    local('git checkout master')
     _update_submodules()
     if not quick:
         _frontend_deps_update()
