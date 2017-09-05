@@ -58,7 +58,12 @@ To start using this please get familiar with git submodules if you haven't used 
 	
  ```
 
- - login to localhost:8082/admin/login edit your user, set country and other stuff, then access frontend apps
+Finally, login to localhost:8082/admin/login to finalize setting up your user:
+
+- In the `auth.User` model make sure to set available countries
+- In the `users.UserProfile` model, make sure to select a country and/or a country override
+
+You should now be able to access frontend apps.
  
 ### Getting latest changes
 
