@@ -28,7 +28,9 @@ To start using this please get familiar with git submodules if you haven't used 
  - Install fabric: `pip install fabric`
  - Initialize submodules and build front-end javascript: `fab init`
  - Contact the Dev Lead to get your db dump, name it `db1.bz2` and add it to: `./db/`
- - Run: `fab devup` in the parent folder and wait for it. (this should update your db) ***sometimes db doesn't start first try, `CTRL-C` and run the command again.***
+ - Run: `fab devup` in the parent folder and wait for it. This should restore the database to the db container.
+   - ***Note: you will likely see some error messages from the DB saying "ERROR: could not open extension control file" or similar.
+   This is okay. Just wait for the process to finish and exit, then `CTRL-C` and run `fab devup` again.***
  - To bring migrations up to speed `fab backend_migrations`
  - Subsequent starts can be run with `fab devup:quick`
  - ***Localhost server should be running on 8082***
