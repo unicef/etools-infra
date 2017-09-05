@@ -81,13 +81,14 @@ def _update_submodules():
     # see https://stackoverflow.com/a/18799234/8207 for more information about submodule branch tracking
     local('git submodule sync')
     local('git submodule update --init --recursive --remote')
-    local('git submodule foreach -q --recursive \'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch\'')
+    local('git submodule foreach -q --recursive \'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch; git merge origin/$branch\'')
 
 
 def update(quick=False):
     local('git fetch --all')
     # TODO should we use `develop` on unicef/etools-infra rather than `master`?
-    # local('git checkout --force %s' % branch)
+    local('git checkout master')
+    local('git merge origin/master')
     _update_submodules()
     if not quick:
         _frontend_deps_update()
