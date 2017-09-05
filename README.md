@@ -46,7 +46,7 @@ To start using this please get familiar with git submodules if you haven't used 
 
 	# open python shell and reduce the number of countries
 	python manage.py shell
-	from util_scripts import *
+	from EquiTrack.util_scripts import *
 	local_country_keep()
 	quit()
 
