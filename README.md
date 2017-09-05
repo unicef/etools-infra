@@ -82,6 +82,10 @@ You can also run `fab update:quick` which will only pull code changes and not up
  - Open GitBash/CMD/PowerShell and run `pip install fabric`
  - Do `Dev Setup` steps to install the project 
 
+### Docker help
+
+See [Docker Cheatsheet](./docs/docker-cheatsheet.md) for some quick tips for working with docker.
+
 ### Prod-like environ setup
 
 Coming soon...
