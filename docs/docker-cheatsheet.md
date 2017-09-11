@@ -19,6 +19,26 @@ To fully delete an image you can run
 For example, `docker rm etoolsinfra_db_1` should remove the db container.
 After you do this you will need to rebuild it (typically with `fab devup`).
 
+### Running a single container (in the backround)
+
+To run just a single container, use the following:
+
+`docker-compose -f docker-compose.dev.yml up db`
+
+If you want to run it in the background, just add `-d`
+
+`docker-compose -f docker-compose.dev.yml up -d db`
+
+You can stop it with `docker stop`. E.g.
+
+`docker stop etoolsinfra_db_1`
+
+### Stop all running containers
+
+Useful in case you've started a bunch of stuff in the background.
+
+`docker stop $(docker ps -a -q)`
+
 ### Rebuilding a single container in place
 
 Sometimes you just want to rebuild an image in place - e.g. if you make changes to the proxy config file.
