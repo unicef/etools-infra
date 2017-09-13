@@ -28,7 +28,9 @@ To start using this please get familiar with git submodules if you haven't used 
  - Install fabric: `pip install fabric`
  - Initialize submodules and build front-end javascript: `fab init`
  - Contact the Dev Lead to get your db dump, name it `db1.bz2` and add it to: `./db/`
- - Run: `fab devup` in the parent folder and wait for it. (this should update your db) ***sometimes db doesn't start first try, `CTRL-C` and run the command again.***
+ - Run: `fab devup` in the parent folder and wait for it. This should restore the database to the db container.
+   - ***Note: you will likely see some error messages from the DB saying "ERROR: could not open extension control file" or similar.
+   This is okay. Just wait for the process to finish and exit, then `CTRL-C` and run `fab devup` again.***
  - To bring migrations up to speed `fab backend_migrations`
  - Subsequent starts can be run with `fab devup:quick`
  - ***Localhost server should be running on 8082***
@@ -47,7 +49,7 @@ To start using this please get familiar with git submodules if you haven't used 
 
 	# open python shell and reduce the number of countries
 	python manage.py shell
-	from util_scripts import *
+	from EquiTrack.util_scripts import *
 	local_country_keep()
 	quit()
 
@@ -59,9 +61,26 @@ To start using this please get familiar with git submodules if you haven't used 
 	
  ```
 
- - login to localhost:8082/admin/login edit your user, set country and other stuff, then access frontend apps
+Finally, login to localhost:8082/admin/login to finalize setting up your user:
+
+- In the `auth.User` model make sure to set available countries
+- In the `users.UserProfile` model, make sure to select a country and/or a country override
+
+You should now be able to access frontend apps.
  
- 
+### Getting latest changes
+
+Getting the latest changes should be a two-step process:
+
+```bash
+   fab update
+   fab devup:quick
+```
+
+`fab update` will pull in the latest submodule changes and update all front-end dependencies, which can be slow
+and is not always necessary.
+You can also run `fab update:quick` which will only pull code changes and not update the front-end dependencies.
+
 ### Dev Setup on Windows 10 requirements
 
  - Enable Hyper-V (PowerShell opened with Administrator rights: `Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All`)
@@ -70,6 +89,10 @@ To start using this please get familiar with git submodules if you haven't used 
  - Install Python 2.7.13 and update your system environment `Path` variable by adding `C:\Python27` and `C:\Python27\Scripts`
  - Open GitBash/CMD/PowerShell and run `pip install fabric`
  - Do `Dev Setup` steps to install the project 
+
+### Docker help
+
+See [Docker Cheatsheet](./docs/docker-cheatsheet.md) for some quick tips for working with docker.
 
 ### Prod-like environ setup
 
