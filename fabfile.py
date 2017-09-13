@@ -24,19 +24,20 @@ def ssh(service):
             local('docker exec -it etoolsinfra_%s_1 /bin/sh' % service)
 
 
-def devup(quick=False):
-    local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
+def devup(quick=False, DB_PORT="51322"):
+    with shell_env(DB_PORT=DB_PORT):
+        local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
-def devup_built(quick=False):
+def devup_built(quick=False, DB_PORT="51322"):
     nginx_config = " -c '/nginx-built.conf'"
     front_end_command = "node express.js"
-    with shell_env(NX_CONFIG=nginx_config, FE_COMMAND=front_end_command):
+    with shell_env(NX_CONFIG=nginx_config, FE_COMMAND=front_end_command, DB_PORT=DB_PORT):
         local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
 def backend_migrations():
     local('docker exec etoolsinfra_backend_1 python /code/EquiTrack/manage.py migrate_schemas --noinput')
 
-def debug(quick=False, DEBUG_PORT='51312'):
+def debug(quick=False, DEBUG_PORT='51312', DB_PORT="51322"):
     try:
         import netifaces as ni
     except ImportError:
@@ -44,7 +45,7 @@ def debug(quick=False, DEBUG_PORT='51312'):
         return
     ni.ifaddresses('en0')
     ip = ni.ifaddresses('en0')[2][0]['addr']
-    with shell_env(BACKEND_DEBUG="_debug", DEBUG_IP=ip, DEBUG_PORT=DEBUG_PORT):
+    with shell_env(BACKEND_DEBUG="_debug", DEBUG_IP=ip, DEBUG_PORT=DEBUG_PORT, DB_PORT=DB_PORT):
         local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
 def remove_docker_containers():
