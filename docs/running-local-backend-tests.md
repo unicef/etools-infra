@@ -56,8 +56,6 @@ You may need to adjust some of these variables as needed to match your local env
 
 (In the virtual environment)
 
-Replace the test with whatever you want to run.
-
 ```
 $ cd backend/EquiTrack
 $ ./manage.py runserver
