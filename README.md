@@ -93,6 +93,11 @@ You can also run `fab update:quick` which will only pull code changes and not up
 
 See [Docker Cheatsheet](./docs/docker-cheatsheet.md) for some quick tips for working with docker.
 
+### Running the Backend Locally
+
+See [Local Backend Setup](./docs/running-local-backend-tests.md) for instructions on running the backend
+not in a docker container, which can be faster/easier to manage.
+
 ### Prod-like environ setup
 
 Coming soon...
