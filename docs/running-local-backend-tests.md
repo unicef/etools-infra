@@ -15,38 +15,23 @@ $ pip install -r backend/Equitrack/requirements/local.txt
 ## Setup your environment variables
 
 Setup the environment variables appropriately in your local environment.
+This should include anything you need to override, for example, the `DATABASE_URL` if you're using the docker database (as described below).
 
 See [this post](https://stackoverflow.com/a/11134336/8207) for instructions/theory, or just edit the following two files as follows:
 
 In `$VIRTUAL_ENV/bin/postactivate` add the following:
 
 ```
-export VISION_URL=https://devapis.unicef.org/BIService/BIWebService.svc
-export SECRET_KEY=
-export DJANGO_DEBUG=true
-export VISION_PASSWORD=
-export DJANGO_SETTINGS_MODULE=EquiTrack.settings.local
-export VISION_USER=
-export PYTHONUNBUFFERED=1
 export DATABASE_URL=postgis://etoolusr:@localhost:5432/etools
-export REDIS_URL=redis://localhost:6379/0
 ```
 
 And `$VIRTUAL_ENV/bin/predeactivate` add the following:
 
 ```
-unset VISION_URL
-unset SECRET_KEY
-unset DJANGO_DEBUG
-unset VISION_PASSWORD
-unset DJANGO_SETTINGS_MODULE
-unset VISION_USER
-unset PYTHONUNBUFFERED
 unset DATABASE_URL
-unset REDIS_URL
 ```
 
-You may need to adjust some of these variables as needed to match your local environment.
+You can add/adjust these variables as needed to match your local environment.
 
 ## Run the DB container alone
 
@@ -68,7 +53,17 @@ You can login at http://localhost:8000/admin/login.
 
 (Again, in the virtual environment)
 
-Replace the test with whatever you want to run.
+You can run all tests as follows:
+
+```
+$ cd backend/EquiTrack
+$ ./runtests.sh
+```
+
+The `runtests.sh` script, in addition to running tests, will also check coverage, run flake8 and has other nice features/default settings.
+
+You can also run the tests through the normal django runner (which is helpful for just running individual tests).
+Just replace the test with whatever you want to run.
 
 ```
 $ cd backend/EquiTrack
