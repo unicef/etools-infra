@@ -35,6 +35,7 @@ To start using this please get familiar with git submodules if you haven't used 
  - Subsequent starts can be run with `fab devup:quick`
  - ***Localhost server should be running on 8082***
  - To SSH into a web container `fab ssh:backend` (to run `manage.py createsuperuser` or other commands)
+ - The database container should be accesible on the host machine on port 51322. The port can be changed by passing it as a parameter to the `fab devup` commands.
  
 
  ```bash
