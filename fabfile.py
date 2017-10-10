@@ -19,10 +19,10 @@ def ssh(service):
 
     with settings(abort_exception=NoBashException):
         try:
-            local('docker exec -it etoolsinfra_%s_1 /bin/bash' % service)
+            local('docker exec -it etoolsinfra_%s /bin/bash' % service)
         except NoBashException:
             # fallback in case bash isn't installed
-            local('docker exec -it etoolsinfra_%s_1 /bin/sh' % service)
+            local('docker exec -it etoolsinfra_%s /bin/sh' % service)
 
 
 def devup(quick=False, DB_PORT="51322"):
@@ -36,7 +36,7 @@ def devup_built(quick=False, DB_PORT="51322"):
         local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
 def backend_migrations():
-    local('docker exec etoolsinfra_backend_1 python /code/EquiTrack/manage.py migrate_schemas --noinput')
+    local('docker exec etoolsinfra_backend python /code/EquiTrack/manage.py migrate_schemas --noinput')
 
 def debug(quick=False, DEBUG_PORT='51312', DB_PORT="51322"):
     try:
@@ -112,12 +112,12 @@ def init():
 
 def test(app=None):
     # TODO figure out a better way to do this...
-    local('docker exec -it etoolsinfra_db_1 /usr/bin/psql -d template1 -c '
+    local('docker exec -it etoolsinfra_db /usr/bin/psql -d template1 -c '
           '\'create extension if not exists hstore;\' -U etoolusr')
     # TODO add flag so caller can indicate --keepdb vs --noinput
     if app is not None:
-        local('docker exec etoolsinfra_backend_1 python'
+        local('docker exec etoolsinfra_backend python'
               '  /code/EquiTrack/manage.py test %s.tests --keepdb' % app)
     else:
-        local('docker exec etoolsinfra_backend_1 python'
+        local('docker exec etoolsinfra_backend python'
               ' /code/EquiTrack/manage.py test --keepdb')
