@@ -6,6 +6,7 @@ services:
       context: ./proxy
       dockerfile: ./Dockerfile
     image: etoolsdev/etools-proxy:dev
+    container_name: etoolsinfra_proxy
     ports:
       - "8082:80"
     depends_on:
@@ -29,6 +30,7 @@ services:
       args:
         REQUIREMENTS_FILE: local.txt
     image: etoolsdev/etools-backend:dev
+    container_name: etoolsinfra_backend
     command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/EquiTrack/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
     volumes:
       - "./backend:/code"
@@ -40,8 +42,9 @@ services:
       context: ./db
       dockerfile: ./Dockerfile
     image: etoolsdev/etools-db:dev
+    container_name: etoolsinfra_db
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-51322}:5432"
 #    volumes:
 #      - './postgres_data:/var/lib/postgresql/data'
 
@@ -50,6 +53,7 @@ services:
       context: ./pmp
       dockerfile: ./Dockerfile-dev
     image: etoolsdev/etools-pmp:dev
+    container_name: etoolsinfra_pmp
     volumes:
       - "./pmp:/code"
     command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
@@ -59,6 +63,7 @@ services:
       context: ./dashboard
       dockerfile: ./Dockerfile-dev
     image: etoolsdev/etools-dashboard:dev
+    container_name: etoolsinfra_dashboard
     volumes:
       - "./dashboard:/code"
     command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
@@ -68,6 +73,7 @@ services:
       context: ./travel
       dockerfile: ./Dockerfile-dev
     image: etoolsdev/etools-travel:dev
+    container_name: etoolsinfra_travel
     volumes:
       - "./travel:/code"
     command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
@@ -77,7 +83,7 @@ services:
       context: ./ap
       dockerfile: ./Dockerfile-dev
     image: etoolsdev/etools-ap:dev
+    container_name: etoolsinfra_ap
     volumes:
       - "./ap:/code"
       - "/code/build"
-
