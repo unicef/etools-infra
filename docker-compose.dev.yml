@@ -15,6 +15,7 @@ services:
       - dashboard
       - travel
       - ap
+      - pdfservice
     command: bash -c "./docker-entrypoint.sh && nginx -g 'daemon off;'${NX_CONFIG}"
 
   backend:
