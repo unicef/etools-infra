@@ -36,6 +36,7 @@ services:
       - "./backend:/code"
     depends_on:
       - db
+      - pdfservice
 
   db:
     build:
@@ -104,6 +105,4 @@ services:
     container_name: etoolsinfra_pdfservice
     volumes:
       - "./pdfservice:/code"
-    command: bash -c "sleep 15 && /code/wait-for-it.sh db:5432 && python /code/PdfService/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
-    depends_on:
-      - db
+    command: bash -c "python /code/PdfService/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
