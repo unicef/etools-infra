@@ -22,3 +22,7 @@
 	path = ap
 	url = https://github.com/unicef/etools-auditor-portal.git
 	branch = master
+[submodule "pdfservice"]
+        path = pdfservice
+        url = https://github.com/unicef/etools-pdf-service.git
+        branch = master
