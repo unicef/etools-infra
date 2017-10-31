@@ -25,4 +25,4 @@
 [submodule "pdfservice"]
 	path = pdfservice
 	url = git@github.com:unicef/etools-pdf-service.git
-        branch = master
+	branch = master
