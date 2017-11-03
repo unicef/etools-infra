@@ -38,6 +38,9 @@ def devup_built(quick=False, DB_PORT="51322"):
 def backend_migrations():
     local('docker exec etoolsinfra_backend python /code/EquiTrack/manage.py migrate_schemas --noinput')
 
+def pdfservice_migrations():
+    local('docker exec etoolsinfra_pdfservice python /code/PdfService/manage.py migrate --noinput')
+
 def debug(quick=False, DEBUG_PORT='51312', DB_PORT="51322"):
     try:
         import netifaces as ni
