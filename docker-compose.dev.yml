@@ -36,6 +36,8 @@ services:
       - "./backend:/code"
     depends_on:
       - db
+    stdin_open: true
+    tty: true
 
   db:
     build:
