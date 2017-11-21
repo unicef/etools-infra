@@ -74,6 +74,19 @@ services:
     ports:
       - "5000:5000"
 
+  superset:
+    image: amancevice/superset
+    depends_on:
+      - warehouse
+      - redis
+    container_name: etoolsinfra_superset
+    environment:
+      MAPBOX_API_KEY: ${MAPBOX_API_KEY}
+    ports:
+      - "5002:8088"
+    volumes:
+      - ./superset:/etc/superset
+
   redash-worker:
     command: scheduler
     volumes_from:
