@@ -22,3 +22,7 @@
 	path = ap
 	url = https://github.com/unicef/etools-auditor-portal.git
 	branch = master
+[submodule "airflow"]
+	path = airflow
+	url = git@github.com:unicef/etools-airflow.git
+    branch = master
