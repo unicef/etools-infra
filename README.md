@@ -78,6 +78,7 @@ You should now be able to access frontend apps.
  - Access ReDash at `localhost:5000`
  - Access Airflow at `localhost:5001`
  - Access Superset at `localhost:5002`
+ - Warehouse DB Source: `postgresql+psycopg2://postgres@warehouse:5432/warehouse`
 
 ### Getting latest changes
 
