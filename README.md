@@ -73,9 +73,11 @@ You should now be able to access frontend apps.
  - After completing the `Dev Setup`
  - Initialize warehouse databases `fab warehouse_init`
  - Backfill airflow DAGs `fab airflow_backfill`
- - You may need to restart airflow and airflow scheduler docker instances
+ - You may need to restart airflow, redash, and superset docker instances
    Check which `etoolsinfra_*` instances are not running and restart them
- - You can access ReDash at `localhost:5000` and Airflow at `localhost:5001`
+ - Access ReDash at `localhost:5000`
+ - Access Airflow at `localhost:5001`
+ - Access Superset at `localhost:5002`
 
 ### Getting latest changes
 
