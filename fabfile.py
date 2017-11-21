@@ -43,10 +43,24 @@ def backend_migrations():
 
 
 def warehouse_init():
-    local('docker exec etoolsinfra_warehouse psql -U postgres -c "create database redash"')
-    local('docker exec etoolsinfra_redash create_db')
-    local('docker exec etoolsinfra_warehouse psql -U postgres -c "create database airflow"')
-    local('docker exec etoolsinfra_warehouse psql -U postgres -c "create database warehouse"')
+    with settings(warn_only=True):
+        local('docker exec etoolsinfra_warehouse psql -U postgres -c "create database warehouse"')
+        local('docker exec etoolsinfra_warehouse psql -U postgres -c "create database superset"')
+        local('docker exec etoolsinfra_warehouse psql -U postgres -c "create database redash"')
+        local('docker exec etoolsinfra_warehouse psql -U postgres -c "create database airflow"')
+
+    redash_init()
+    superset_init()
+
+
+def redash_init():
+    with settings(warn_only=True):
+        local('docker-compose -f docker-compose.dev.yml run --rm redash create_db')
+
+
+def superset_init():
+    with settings(warn_only=True):
+        local('docker exec -it etoolsinfra_superset superset-init')
 
 
 def airflow_backfill():
