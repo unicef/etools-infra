@@ -36,7 +36,7 @@ To start using this please get familiar with git submodules if you haven't used 
  - ***Localhost server should be running on 8082***
  - To SSH into a web container `fab ssh:backend` (to run `manage.py createsuperuser` or other commands)
  - The database container should be accesible on the host machine on port 51322. The port can be changed by passing it as a parameter to the `fab devup` commands.
- 
+
 
  ```bash
 	fab ssh:backend
@@ -56,9 +56,9 @@ To start using this please get familiar with git submodules if you haven't used 
 	# run migrations scripts
 	python manage.py migrate_schemas --noinput
 
-	# import currencies data 
+	# import currencies data
 	python manage.py import_exchange_rates
-	
+
  ```
 
 Finally, login to localhost:8082/admin/login to finalize setting up your user:
@@ -67,7 +67,16 @@ Finally, login to localhost:8082/admin/login to finalize setting up your user:
 - In the `users.UserProfile` model, make sure to select a country and/or a country override
 
 You should now be able to access frontend apps.
- 
+
+### Warehouse Setup
+
+ - After completing the `Dev Setup`
+ - Initialize warehouse databases `fab warehouse_init`
+ - Backfill airflow DAGs `fab airflow_backfill`
+ - You may need to restart airflow and airflow scheduler docker instances
+   Check which `etoolsinfra_*` instances are not running and restart them
+ - You can access ReDash at `localhost:5000` and Airflow at `localhost:5001`
+
 ### Getting latest changes
 
 Getting the latest changes should be a two-step process:
@@ -88,7 +97,7 @@ You can also run `fab update:quick` which will only pull code changes and not up
  - Open Docker Settings and add your shared partitions (the one that contains the folder you are gonna install etools)
  - Install Python 2.7.13 and update your system environment `Path` variable by adding `C:\Python27` and `C:\Python27\Scripts`
  - Open GitBash/CMD/PowerShell and run `pip install fabric`
- - Do `Dev Setup` steps to install the project 
+ - Do `Dev Setup` steps to install the project
 
 ### Docker help
 
