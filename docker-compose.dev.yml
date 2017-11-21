@@ -48,6 +48,112 @@ services:
 #    volumes:
 #      - './postgres_data:/var/lib/postgresql/data'
 
+  warehouse:
+    build:
+      context: ./warehouse
+      dockerfile: ./Dockerfile
+    image: etoolsdev/etools-warehouse:dev
+    container_name: etoolsinfra_warehouse
+
+  redis:
+    image: redis:4.0-alpine
+    container_name: etoolsinfra_redis
+
+  redash:
+    image: redash/redash:latest
+    depends_on:
+      - warehouse
+      - redis
+    command: server
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: "INFO"
+      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_DATABASE_URL: "postgresql://postgres@warehouse/redash"
+    container_name: etoolsinfra_redash
+    ports:
+      - "5000:5000"
+
+  redash-worker:
+    command: scheduler
+    volumes_from:
+      - redash
+    depends_on:
+      - redash
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: "INFO"
+      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_DATABASE_URL: "postgresql://postgres@warehouse/redash"
+      QUEUES: "queries,scheduled_queries,celery"
+      WORKERS_COUNT: 2
+    image: redash/redash:latest
+    container_name: etoolsinfra_redash_worker
+
+  airflow:
+    image: puckel/docker-airflow:1.8.2
+    depends_on:
+      - redis
+      - warehouse
+    command: webserver
+    container_name: etoolsinfra_airflow
+    environment:
+      LOAD_EX: "n"
+      EXECUTOR: "Celery"
+      FERNET_KEY: "811bm0j8RpZv6qE2gPDy8rw5y7S8oH1O0NqBMuQ_WkM="
+      POSTGRES_HOST: warehouse
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: ""
+    volumes:
+      - ./airflow/dags:/usr/local/airflow/dags
+      - ./airflow/sql:/usr/local/airflow/sql
+    ports:
+      - "5001:8080"
+
+  flower:
+    image: puckel/docker-airflow:1.8.2
+    depends_on:
+      - redis
+    container_name: etoolsinfra_flower
+    command: flower
+    environment:
+      EXECUTOR: "Celery"
+    ports:
+      - "5555:5555"
+
+  airflow-scheduler:
+    image: puckel/docker-airflow:1.8.2
+    depends_on:
+      - airflow
+    container_name: etoolsinfra_airflow_scheduler
+    command: scheduler
+    volumes:
+      - ./airflow/dags:/usr/local/airflow/dags
+      - ./airflow/sql:/usr/local/airflow/sql
+    environment:
+      LOAD_EX: "n"
+      FERNET_KEY: "811bm0j8RpZv6qE2gPDy8rw5y7S8oH1O0NqBMuQ_WkM="
+      EXECUTOR: "Celery"
+      POSTGRES_HOST: warehouse
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: ""
+
+  airflow-worker:
+    image: puckel/docker-airflow:1.8.2
+    depends_on:
+      - airflow-scheduler
+    container_name: etoolsinfra_airflow_worker
+    command: worker
+    volumes:
+      - ./airflow/dags:/usr/local/airflow/dags
+      - ./airflow/sql:/usr/local/airflow/sql
+    environment:
+      FERNET_KEY: "811bm0j8RpZv6qE2gPDy8rw5y7S8oH1O0NqBMuQ_WkM="
+      EXECUTOR: "Celery"
+      POSTGRES_HOST: warehouse
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: ""
+
   pmp:
     build:
       context: ./pmp

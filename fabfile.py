@@ -1,6 +1,7 @@
+import datetime
 import platform
 
-from fabric.api import local, env, settings
+from fabric.api import local, settings
 from fabric.context_managers import shell_env, lcd
 
 
@@ -29,14 +30,36 @@ def devup(quick=False, DB_PORT="51322"):
     with shell_env(DB_PORT=DB_PORT):
         local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
+
 def devup_built(quick=False, DB_PORT="51322"):
     nginx_config = " -c '/nginx-built.conf'"
     front_end_command = "node express.js"
     with shell_env(NX_CONFIG=nginx_config, FE_COMMAND=front_end_command, DB_PORT=DB_PORT):
         local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
+
 def backend_migrations():
     local('docker exec etoolsinfra_backend python /code/EquiTrack/manage.py migrate_schemas --noinput')
+
+
+def warehouse_init():
+    local('docker exec etoolsinfra_warehouse psql -U postgres -c "create database redash"')
+    local('docker exec etoolsinfra_redash create_db')
+    local('docker exec etoolsinfra_warehouse psql -U postgres -c "create database airflow"')
+    local('docker exec etoolsinfra_warehouse psql -U postgres -c "create database warehouse"')
+
+
+def airflow_backfill():
+    local('docker exec etoolsinfra_airflow airflow backfill init_settings -s {} --donot_pickle'.format(
+        datetime.date.today()
+    ))
+    local('docker exec etoolsinfra_airflow airflow backfill init_etl_intervention -s {} --donot_pickle'.format(
+        datetime.date.today()
+    ))
+    local('docker exec etoolsinfra_airflow airflow backfill etl_intervention -s {} --donot_pickle'.format(
+        datetime.date.today()
+    ))
+
 
 def debug(quick=False, DEBUG_PORT='51312', DB_PORT="51322"):
     try:
@@ -49,9 +72,11 @@ def debug(quick=False, DEBUG_PORT='51312', DB_PORT="51322"):
     with shell_env(BACKEND_DEBUG="_debug", DEBUG_IP=ip, DEBUG_PORT=DEBUG_PORT, DB_PORT=DB_PORT):
         local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
+
 def remove_docker_containers():
     local('docker stop $(docker ps -q)')
     local('docker rm $(docker ps -q)')
+
 
 def stop_docker_containers():
     local('docker stop $(docker ps -q)')
