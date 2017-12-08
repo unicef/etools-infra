@@ -35,6 +35,9 @@ def devup_built(quick=False, DB_PORT="51322"):
     with shell_env(NX_CONFIG=nginx_config, FE_COMMAND=front_end_command, DB_PORT=DB_PORT):
         local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
+def devup_built_windows(quick=False):
+    local('docker-compose -f docker-compose.dev.yml -f docker-compose.dev-built-win.yml up --force-recreate %s' % ('--build' if not quick else ''))
+
 def backend_migrations():
     local('docker exec etoolsinfra_backend python /code/EquiTrack/manage.py migrate_schemas --noinput')
 
