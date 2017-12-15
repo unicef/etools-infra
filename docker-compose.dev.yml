@@ -92,8 +92,6 @@ services:
 
   pdfservice:
     environment:
-        DEBUG_IP: ${DEBUG_IP:-"10.0.2.2"}
-        DEBUG_PORT: ${DEBUG_PORT:-51312}
         DJANGO_SETTINGS_MODULE: PdfService.settings.local
         PYCHARM_DEBUG: 1
     build:
