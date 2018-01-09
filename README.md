@@ -23,7 +23,7 @@ To start using this please get familiar with git submodules if you haven't used 
 ### Dev Setup
 
  - Make sure you have dependencies installed
- - Clone the repo: `git clone https://github.com/unicef/etools-infra.git`
+ - Clone the repo: `git clone git@github.com:unicef/etools-infra.git`
  - Setup a virtualenv: `mkvirtualenv --no-site-packages etools`
  - Install fabric: `pip install fabric`
  - Initialize submodules and build front-end javascript: `fab init`
