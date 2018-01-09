@@ -73,6 +73,18 @@ def airflow_backfill():
     local('docker exec etoolsinfra_airflow airflow backfill etl_intervention -s {} --donot_pickle'.format(
         datetime.date.today()
     ))
+    local('docker exec etoolsinfra_airflow airflow backfill init_etl_agreement -s {} --donot_pickle'.format(
+        datetime.date.today()
+    ))
+    local('docker exec etoolsinfra_airflow airflow backfill etl_agreement -s {} --donot_pickle'.format(
+        datetime.date.today()
+    ))
+    local('docker exec etoolsinfra_airflow airflow backfill init_etl_partner -s {} --donot_pickle'.format(
+        datetime.date.today()
+    ))
+    local('docker exec etoolsinfra_airflow airflow backfill etl_partner -s {} --donot_pickle'.format(
+        datetime.date.today()
+    ))
 
 
 def debug(quick=False, DEBUG_PORT='51312', DB_PORT="51322"):
