@@ -87,3 +87,13 @@ services:
     volumes:
       - "./ap:/code"
       - "/code/build"
+
+  tpm:
+    build:
+      context: ./tpm
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-tpm:dev
+    container_name: etoolsinfra_tpm
+    volumes:
+      - "./tpm:/code"
+      - "/code/build"
