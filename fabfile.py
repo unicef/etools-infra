@@ -107,8 +107,8 @@ def update(quick=False):
     local('git checkout master')
     local('git merge origin/master')
     _update_submodules()
-    # delete .pyc files
-    local("find . -name '*.pyc' -delete")
+    # delete .pyc files - something creates some of them as root, sigh...
+    local("sudo find . -name '*.pyc' -delete")
     if not quick:
         _frontend_deps_update()
 
