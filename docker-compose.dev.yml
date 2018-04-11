@@ -16,6 +16,7 @@ services:
       - travel
       - ap
       - pdfservice
+      - tpm
     command: bash -c "./docker-entrypoint.sh && nginx -g 'daemon off;'${NX_CONFIG}"
 
   backend:
@@ -89,7 +90,6 @@ services:
     volumes:
       - "./ap:/code"
       - "/code/build"
-
   pdfservice:
     environment:
         DJANGO_SETTINGS_MODULE: PdfService.settings.local
@@ -104,3 +104,12 @@ services:
     volumes:
       - "./pdfservice:/code"
     command: bash -c "python /code/PdfService/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
+  tpm:
+    build:
+      context: ./tpm
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-tpm:dev
+    container_name: etoolsinfra_tpm
+    volumes:
+      - "./tpm:/code"
+      - "/code/build"
