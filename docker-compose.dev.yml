@@ -15,6 +15,7 @@ services:
       - dashboard
       - travel
       - ap
+      - tpm
     command: bash -c "./docker-entrypoint.sh && nginx -g 'daemon off;'${NX_CONFIG}"
 
   backend:
@@ -86,4 +87,13 @@ services:
     container_name: etoolsinfra_ap
     volumes:
       - "./ap:/code"
+      - "/code/build"
+  tpm:
+    build:
+      context: ./tpm
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-tpm:dev
+    container_name: etoolsinfra_tpm
+    volumes:
+      - "./tpm:/code"
       - "/code/build"
