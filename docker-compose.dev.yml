@@ -92,8 +92,8 @@ services:
       - "/code/build"
   pdfservice:
     environment:
-        DJANGO_SETTINGS_MODULE: PdfService.settings.local
-        PYCHARM_DEBUG: 1
+      DJANGO_SETTINGS_MODULE: PdfService.settings.local
+      PYCHARM_DEBUG: 1
     build:
       context: ./pdfservice
       dockerfile: ./Dockerfile-dev
