@@ -25,6 +25,11 @@ def ssh(service):
             local('docker exec -it etoolsinfra_%s /bin/sh' % service)
 
 
+def reallyclean():
+    local('docker-compose -f docker-compose.dev.yml down --rmi all --volumes')
+    local('docker volume rm $(docker volume ls -qf dangling=true)')
+
+
 def devup(quick=False, DB_PORT="51322"):
     with shell_env(DB_PORT=DB_PORT):
         local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
@@ -36,11 +41,11 @@ def devup_built(quick=False, DB_PORT="51322"):
     with shell_env(NX_CONFIG=nginx_config, FE_COMMAND=front_end_command, DB_PORT=DB_PORT):
         local('docker-compose -f docker-compose.dev.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
-        
+
 def devup_built_windows(quick=False):
     local('docker-compose -f docker-compose.dev.yml -f docker-compose.dev-built-win.yml up --force-recreate %s' % ('--build' if not quick else ''))
 
-    
+
 def backend_migrations():
     local('docker exec etoolsinfra_backend python /code/EquiTrack/manage.py migrate_schemas --noinput')
 
@@ -102,8 +107,8 @@ def update(quick=False):
     local('git checkout master')
     local('git merge origin/master')
     _update_submodules()
-    # delete .pyc files
-    local("find . -name '*.pyc' -delete")
+    # delete .pyc files - something creates some of them as root, sigh...
+    local("sudo find . -name '*.pyc' -delete")
     if not quick:
         _frontend_deps_update()
 
