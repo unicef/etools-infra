@@ -47,7 +47,7 @@ def devup_built_windows(quick=False):
 
 
 def backend_migrations():
-    local('docker exec etoolsinfra_backend python /code/EquiTrack/manage.py migrate_schemas --noinput')
+    local('docker exec etoolsinfra_backend python /code/manage.py migrate_schemas --noinput')
 
 
 def debug(quick=False, DEBUG_PORT='51312', DB_PORT="51322"):

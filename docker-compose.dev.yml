@@ -23,7 +23,7 @@ services:
       DEBUG_IP: ${DEBUG_IP:-"10.0.2.2"}
       DEBUG_PORT: ${DEBUG_PORT:-51312}
       DATABASE_URL: postgis://etoolusr:@db:5432/etools
-      DJANGO_SETTINGS_MODULE: EquiTrack.settings.local
+      DJANGO_SETTINGS_MODULE: etools.config.settings.local
       PYCHARM_DEBUG: 1
     build:
       context: ./backend
@@ -32,7 +32,7 @@ services:
         REQUIREMENTS_FILE: local.txt
     image: etoolsdev/etools-backend:dev
     container_name: etoolsinfra_backend
-    command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/EquiTrack/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
+    command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
     volumes:
       - "./backend:/code"
     depends_on:
