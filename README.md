@@ -75,7 +75,6 @@ in this repo at docs/docker-cheatsheet.md.
 
  ```bash
 	fab ssh:backend
-	cd EquiTrack
 	# create super user (choose public schema when asked)
 	python manage.py createsuperuser
 
