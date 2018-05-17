@@ -9,6 +9,7 @@ that is part of etools.
 ### Notes:
 
 To start using this please get familiar with git submodules if you haven't used them before:
+
     - https://git-scm.com/book/en/v2/Git-Tools-Submodules
     - https://github.com/blog/2104-working-with-submodules
 
@@ -32,6 +33,8 @@ in this repo at docs/docker-cheatsheet.md.
  - Setup a virtualenv: `mkvirtualenv -p $(type -p python3.6) --no-site-packages etools`
 
  - Install fabric: `pip install fabric3`
+
+ - Change to the etools-infra directory: `cd etools-infra`
 
  - Initialize submodules and build front-end javascript: `fab init`.
    Apparently it's normal to see lots of warnings from npm and bower,
