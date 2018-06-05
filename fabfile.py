@@ -9,6 +9,7 @@ APP_SUBMODULE_DIRECTORIES = (
     'pmp',
     'travel',
     'ap',
+    'tpm',
 )
 
 
