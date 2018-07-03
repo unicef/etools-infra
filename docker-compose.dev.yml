@@ -104,7 +104,7 @@ services:
       context: ./apd
       dockerfile: ./Dockerfile-dev
     image: etoolsdev/etools-action-points:dev
-    container_name: etoolsinfra_tpm
+    container_name: etoolsinfra_apd
     volumes:
       - "./apd:/code"
       - "/code/build"
