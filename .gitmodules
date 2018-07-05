@@ -27,6 +27,6 @@
 	url = git@github.com:unicef/etools-tpm.git
   branch = master
 [submodule "apd"]
-	path = etools-action-points
+	path = apd
 	url = git@github.com:unicef/etools-action-points.git
 	branch = master
