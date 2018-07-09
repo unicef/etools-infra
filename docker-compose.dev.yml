@@ -17,7 +17,7 @@ services:
       - ap
       - tpm
       - apd
-    command: bash -c "./docker-entrypoint.sh && nginx -g 'daemon off;'${NX_CONFIG}"
+#    command: bash -c "./docker-entrypoint.sh && nginx -g 'daemon off;'${NX_CONFIG}"
 
   backend:
     environment:
