@@ -16,7 +16,8 @@ services:
       - travel
       - ap
       - tpm
-    command: bash -c "./docker-entrypoint.sh && nginx -g 'daemon off;'${NX_CONFIG}"
+      - apd
+#    command: bash -c "./docker-entrypoint.sh && nginx -g 'daemon off;'${NX_CONFIG}"
 
   backend:
     environment:
@@ -29,7 +30,7 @@ services:
       context: ./backend
       dockerfile: ./Dockerfile-dev
       args:
-        REQUIREMENTS_FILE: local.txt
+        REQUIREMENTS_FILE: test.txt
     image: etoolsdev/etools-backend:dev
     container_name: etoolsinfra_backend
     command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
@@ -96,4 +97,14 @@ services:
     container_name: etoolsinfra_tpm
     volumes:
       - "./tpm:/code"
+      - "/code/build"
+
+  apd:
+    build:
+      context: ./apd
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-action-points:dev
+    container_name: etoolsinfra_apd
+    volumes:
+      - "./apd:/code"
       - "/code/build"

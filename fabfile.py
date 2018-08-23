@@ -9,7 +9,8 @@ APP_SUBMODULE_DIRECTORIES = (
     'pmp',
     'travel',
     'ap',
-    'apd'
+    'apd',
+    'tpm',
 )
 
 
@@ -132,9 +133,6 @@ def init():
 
 
 def test(app=None):
-    # TODO figure out a better way to do this...
-    local('docker exec -it etoolsinfra_db /usr/bin/psql -d template1 -c '
-          '\'create extension if not exists hstore;\' -U etoolusr')
     # TODO add flag so caller can indicate --keepdb vs --noinput
     if app is not None:
         local('docker exec etoolsinfra_backend python'
