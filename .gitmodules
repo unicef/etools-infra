@@ -22,6 +22,10 @@
 	path = ap
 	url = git@github.com:unicef/etools-auditor-portal.git
 	branch = master
+[submodule "pdfservice"]
+    path = pdfservice
+    url = git@github.com:unicef/etools-pdf-service.git
+    branch = master
 [submodule "tpm"]
 	path = tpm
 	url = git@github.com:unicef/etools-tpm.git
