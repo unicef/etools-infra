@@ -30,3 +30,7 @@
 	path = apd
 	url = git@github.com:unicef/etools-action-points.git
 	branch = master
+[submodule "manage"]
+	path = manage
+	url = git@github.com:marko911/etools-admin.git
+	branch = master
