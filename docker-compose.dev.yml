@@ -98,7 +98,6 @@ services:
     volumes:
       - "./tpm:/code"
       - "/code/build"
-
   apd:
     build:
       context: ./apd
