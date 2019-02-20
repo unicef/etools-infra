@@ -11,7 +11,7 @@ services:
       - "8082:80"
     depends_on:
       - backend
-      - pmp
+#      - pmp
       - dashboard
       - travel
       - ap
@@ -28,12 +28,10 @@ services:
       PYCHARM_DEBUG: 1
     build:
       context: ./backend
-      dockerfile: ./Dockerfile-dev
-      args:
-        REQUIREMENTS_FILE: test.txt
+      dockerfile: ./docker/Dockerfile.dev
     image: etoolsdev/etools-backend:dev
     container_name: etoolsinfra_backend
-    command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
+    command: /bin/bash -c "wait-for-it.sh db:5432 -t 30 && python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
     volumes:
       - "./backend:/code"
     depends_on:
