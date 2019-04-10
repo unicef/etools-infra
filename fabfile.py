@@ -136,7 +136,7 @@ def test(app=None):
     # TODO add flag so caller can indicate --keepdb vs --noinput
     if app is not None:
         local('docker exec etoolsinfra_backend python'
-              '  /code/EquiTrack/manage.py test %s.tests --keepdb' % app)
+              '  /code/core/manage.py test %s.tests --keepdb' % app)
     else:
         local('docker exec etoolsinfra_backend python'
-              ' /code/EquiTrack/manage.py test --keepdb')
+              ' /code/core/manage.py test --keepdb')

@@ -33,7 +33,7 @@ services:
         REQUIREMENTS_FILE: test.txt
     image: etoolsdev/etools-backend:dev
     container_name: etoolsinfra_backend
-    command: bash -c "sleep 10 && /code/wait-for-it.sh db:5432 && python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
+    command: bash -c "sleep 10 && python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080"
     volumes:
       - "./backend:/code"
     depends_on:
