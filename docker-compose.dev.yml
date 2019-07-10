@@ -107,4 +107,4 @@ services:
     container_name: etoolsinfra_apd
     volumes:
       - "./apd:/code"
-      - "/code/build"
+    command: ${FE_COMMAND:-sh -c "npm run start"}
