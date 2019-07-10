@@ -50,16 +50,6 @@ services:
 #    volumes:
 #      - './postgres_data:/var/lib/postgresql/data'
 
-  apd:
-    build:
-      context: ./apd
-      dockerfile: ./Dockerfile-dev
-    image: etoolsdev/etools-action-points:dev
-    container_name: etoolsinfra_apd
-    volumes:
-      - "./apd:/code"
-    command: ${FE_COMMAND:-sh -c "npm run start"}
-
   pmp:
     build:
       context: ./pmp
@@ -108,3 +98,13 @@ services:
     volumes:
       - "./tpm:/code"
       - "/code/build"
+
+  apd:
+    build:
+      context: ./apd
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-action-points:dev
+    container_name: etoolsinfra_apd
+    volumes:
+      - "./apd:/code"
+    command: ${FE_COMMAND:-sh -c "npm run start"}
