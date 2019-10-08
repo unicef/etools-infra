@@ -17,6 +17,7 @@ services:
       - ap
       - tpm
       - apd
+      - psea
 #    command: bash -c "./docker-entrypoint.sh && nginx -g 'daemon off;'${NX_CONFIG}"
 
   backend:
@@ -59,7 +60,7 @@ services:
     volumes:
       - "./pmp:/code"
     command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
-#
+
   dashboard:
     build:
       context: ./dashboard
@@ -69,7 +70,7 @@ services:
     volumes:
       - "./dashboard:/code"
     command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
-#
+
   travel:
     build:
       context: ./travel
@@ -89,6 +90,19 @@ services:
     volumes:
       - "./ap:/code"
       - "/code/build"
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+
+  psea:
+    build:
+      context: ./psea
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-psea:dev
+    container_name: etoolsinfra_psea
+    volumes:
+      - "./psea:/code"
+      - "/code/build"
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+
   tpm:
     build:
       context: ./tpm
