@@ -30,7 +30,7 @@ in this repo at docs/docker-cheatsheet.md.
 
  - Clone the repo: `git clone git@github.com:unicef/etools-infra.git`
 
- - Setup a virtualenv: `mkvirtualenv -p $(type -p python3.6) --no-site-packages etools`
+ - Setup a virtualenv: `mkvirtualenv -p $(type -p python3.7) --no-site-packages etools`
 
  - Install fabric: `pip install fabric3`
 
