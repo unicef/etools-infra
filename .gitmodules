@@ -30,3 +30,6 @@
 	path = apd
 	url = git@github.com:unicef/etools-action-points.git
 	branch = master
+[submodule "psea"]
+	path = psea
+	url = git@github.com:unicef/etools-psea.git
