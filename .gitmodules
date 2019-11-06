@@ -4,12 +4,12 @@
 	branch = develop
 [submodule "travel"]
 	path = travel
-	url = git@github.com:unicef/eToolsTravel2Field
+	url = git@github.com:unicef/etools-t2f
 	branch = develop
 [submodule "proxy"]
 	path = proxy
 	url = git@github.com:unicef/etools-nginx-proxy
-	branch = master
+	branch = develop
 [submodule "backend"]
 	path = backend
 	url = git@github.com:unicef/etools
@@ -21,16 +21,16 @@
 [submodule "ap"]
 	path = ap
 	url = git@github.com:unicef/etools-auditor-portal.git
-	branch = master
+	branch = develop
 [submodule "tpm"]
 	path = tpm
 	url = git@github.com:unicef/etools-tpm.git
-    branch = master
+    branch = develop
 [submodule "apd"]
 	path = apd
 	url = git@github.com:unicef/etools-action-points.git
-	branch = master
+	branch = develop
 [submodule "psea"]
 	path = psea
 	url = git@github.com:unicef/etools-psea.git
-	branch = master
+	branch = develop
