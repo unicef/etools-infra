@@ -25,7 +25,7 @@
 [submodule "tpm"]
 	path = tpm
 	url = git@github.com:unicef/etools-tpm.git
-  branch = master
+    branch = master
 [submodule "apd"]
 	path = apd
 	url = git@github.com:unicef/etools-action-points.git
@@ -33,3 +33,4 @@
 [submodule "psea"]
 	path = psea
 	url = git@github.com:unicef/etools-psea.git
+	branch = master
