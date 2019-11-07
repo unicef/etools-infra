@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   proxy:
-    image: traefik
+    image: traefik:v1.7
     command: --api --docker
     ports:
       - "8082:80"
