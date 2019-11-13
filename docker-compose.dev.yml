@@ -119,6 +119,12 @@ services:
       dockerfile: ./Dockerfile-dev
     image: etoolsdev/etools-psea:dev
     container_name: etoolsinfra_psea
+    labels:
+      - traefik.backend=psea
+      - traefik.frontend.rule=PathPrefixStrip:/psea/
+      - traefik.priority=10
+      - traefik.enable=true
+      - traefik.port=8080
     volumes:
       - "./psea:/code"
       - "/code/build"
