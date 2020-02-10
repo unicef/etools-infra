@@ -6,10 +6,6 @@
 	path = travel
 	url = git@github.com:unicef/etools-t2f
 	branch = develop
-[submodule "proxy"]
-	path = proxy
-	url = git@github.com:unicef/etools-nginx-proxy
-	branch = develop
 [submodule "backend"]
 	path = backend
 	url = git@github.com:unicef/etools

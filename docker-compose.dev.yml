@@ -2,8 +2,8 @@ version: '2.1'
 
 services:
   proxy:
-    image: traefik:v1.7
-    command: --api --docker
+    image: traefik:v2.1
+    command: --api --providers.docker
     ports:
       - "8082:80"
       - "8080:8080"
@@ -27,11 +27,10 @@ services:
     container_name: etoolsinfra_backend
     command: python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080
     labels:
-      - traefik.backend=backend
-      - traefik.frontend.rule=PathPrefix:/
-      - traefik.priority=1
+      - "traefik.http.routers.backend.rule=PathPrefix(`/`)"
+      - traefik.http.routers.backend.service=backend
+      - traefik.http.services.backend.loadBalancer.server.port=8080
       - traefik.enable=true
-      - traefik.port=8080
     volumes:
       - "./backend:/code"
     depends_on:
@@ -55,11 +54,12 @@ services:
     image: etoolsdev/etools-pmp:dev
     container_name: etoolsinfra_pmp
     labels:
-      - traefik.backend=pmp
-      - traefik.frontend.rule=PathPrefixStrip:/pmp/
-      - traefik.priority=10
+      - "traefik.http.routers.pmp.rule=PathPrefix(`/pmp`)"
+      - traefik.http.routers.pmp.service=pmp
+      - traefik.http.routers.pmp.middlewares=pmp-stripprefix
+      - traefik.http.middlewares.pmp-stripprefix.stripprefix.prefixes=/pmp
+      - traefik.http.services.pmp.loadBalancer.server.port=8080
       - traefik.enable=true
-      - traefik.port=8080
     volumes:
       - "./pmp:/code"
     command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
@@ -71,11 +71,12 @@ services:
     image: etoolsdev/etools-dashboard:dev
     container_name: etoolsinfra_dashboard
     labels:
-      - traefik.backend=dashboard
-      - traefik.frontend.rule=PathPrefixStrip:/dash/
-      - traefik.priority=10
+      - "traefik.http.routers.dashboard.rule=PathPrefix(`/dash`)"
+      - traefik.http.routers.dashboard.service=dashboard
+      - traefik.http.routers.dashboard.middlewares=dashboard-stripprefix
+      - traefik.http.middlewares.dashboard-stripprefix.stripprefix.prefixes=/dash
+      - traefik.http.services.dashboard.loadBalancer.server.port=8080
       - traefik.enable=true
-      - traefik.port=8080
     volumes:
       - "./dashboard:/code"
     command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
@@ -87,11 +88,12 @@ services:
     image: etoolsdev/etools-travel:dev
     container_name: etoolsinfra_travel
     labels:
-      - traefik.backend=travel
-      - traefik.frontend.rule=PathPrefixStrip:/t2f/
-      - traefik.priority=10
+      - "traefik.http.routers.travel.rule=PathPrefix(`/t2f`)"
+      - traefik.http.routers.travel.service=travel
+      - traefik.http.routers.middlewares=travel-stripprefix
+      - traefik.http.middlewares.travel-stripprefix.stripprefix.prefixes=/t2f
+      - traefik.http.services.travel.loadBalancer.server.port=8080
       - traefik.enable=true
-      - traefik.port=8080
     volumes:
       - "./travel:/code"
     command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
@@ -103,11 +105,12 @@ services:
     image: etoolsdev/etools-ap:dev
     container_name: etoolsinfra_ap
     labels:
-      - traefik.backend=ap
-      - traefik.frontend.rule=PathPrefixStrip:/ap/
-      - traefik.priority=10
+      - "traefik.http.routers.ap.rule=PathPrefix(`/ap`)"
+      - traefik.http.routers.ap.service=ap
+      - traefik.http.routers.ap.middlewares=ap-stripprefix
+      - traefik.http.middlewares.ap-stripprefix.stripprefix.prefixes=/ap
+      - traefik.http.services.ap.loadBalancer.server.port=8080
       - traefik.enable=true
-      - traefik.port=8080
     volumes:
       - "./ap:/code"
       - "/code/build"
@@ -120,11 +123,12 @@ services:
     image: etoolsdev/etools-psea:dev
     container_name: etoolsinfra_psea
     labels:
-      - traefik.backend=psea
-      - traefik.frontend.rule=PathPrefixStrip:/psea/
-      - traefik.priority=10
+      - "traefik.http.routers.psea.rule=PathPrefix(`/psea`)"
+      - traefik.http.routers.psea.service=psea
+      - traefik.http.routers.psea.middlewares=psea-stripprefix
+      - traefik.http.middlewares.psea-stripprefix.stripprefix.prefixes=/psea
+      - traefik.http.services.psea.loadBalancer.server.port=8080
       - traefik.enable=true
-      - traefik.port=8080
     volumes:
       - "./psea:/code"
       - "/code/build"
@@ -137,11 +141,12 @@ services:
     image: etoolsdev/etools-tpm:dev
     container_name: etoolsinfra_tpm
     labels:
-      - traefik.backend=tpm
-      - traefik.frontend.rule=PathPrefixStrip:/tpm/
-      - traefik.priority=10
+      - "traefik.http.routers.tpm.rule=PathPrefix(`/tpm`)"
+      - traefik.http.routers.tpm.service=tpm
+      - traefik.http.routers.tpm.middlewares=tpm-stripprefix
+      - traefik.http.middlewares.tpm-stripprefix.stripprefix.prefixes=/tmp
+      - traefik.http.services.tpm.loadBalancer.server.port=8080
       - traefik.enable=true
-      - traefik.port=8080
     volumes:
       - "./tpm:/code"
       - "/code/build"
@@ -153,11 +158,12 @@ services:
     image: etoolsdev/etools-action-points:dev
     container_name: etoolsinfra_apd
     labels:
-      - traefik.backend=apd
-      - traefik.frontend.rule=PathPrefixStrip:/apd/
-      - traefik.priority=10
+      - "traefik.http.routers.apd.rule=PathPrefix(`/apd`)"
+      - traefik.http.routers.apd.service=apd
+      - traefik.http.routers.apd.middlewares=apd-stripprefix
+      - traefik.http.middlewares.apd-stripprefix.stripprefix.prefixes=/apd
+      - traefik.http.services.apd.loadBalancer.server.port=8080
       - traefik.enable=true
-      - traefik.port=8080
     volumes:
       - "./apd:/code"
     command: ${FE_COMMAND:-sh -c "npm run start"}
