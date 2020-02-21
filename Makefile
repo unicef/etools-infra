@@ -4,12 +4,12 @@ CMD=docker-compose -f docker-compose.dev.yml
 help:
 	@echo ''
 	@echo 'Usage:'
-	@echo '   make ssh SERVICE=<service>     ssh into container'
-	@echo '   make reallyclean               remove docker containers'
-	@echo '   make devup_build               re/build containers and start'
-	@echo '   make devup                     start containers'
+	@echo '   make reallyclean		 remove docker containers'
+	@echo '   make devup_build		 re/build containers and start'
+	@echo '   make devup			 start containers'
 	@echo '   make devup_windows		 start containers on windows'
 	@echo '   make devup_windows_build	 re/build and start on windows'
+	@echo '   make ssh SERVICE=<service>	 ssh into container'
 	@echo '   make backend_migrations	 run backend migrations'
 	@echo '   make stop			 stop containers'
 	@echo '   make remove			 remove containers'
@@ -20,7 +20,7 @@ help:
 
 
 ssh:
-	docker exec -it etoolsinfra_${SERVICE} /bin/sh
+	docker exec -it etools_${SERVICE} /bin/sh
 
 
 reallyclean:
@@ -57,8 +57,12 @@ remove:
 	${CMD} rm
 
 
-start:
+run:
 	${MAKE} devup
+
+
+build_run:
+	${MAKE} devup_build
 
 
 test:
@@ -67,3 +71,11 @@ test:
 
 test_app:
 	${MAKE} test ${APP}.tests
+
+
+update:
+	./scripts/update.sh
+
+
+docker-compose:
+	./scripts/template.sh
