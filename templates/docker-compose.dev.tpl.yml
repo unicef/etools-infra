@@ -7,7 +7,7 @@ services:
     ports:
       - "8082:80"
       - "8080:8080"
-    container_name: etoolsinfra_proxy
+    container_name: etools_proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -19,7 +19,7 @@ services:
       DATABASE_URL: postgis://etoolusr:@db:5432/etools
       DJANGO_SETTINGS_MODULE: etools.config.settings.local
       PYCHARM_DEBUG: 1
-    container_name: etoolsinfra_backend
+    container_name: etools_backend
     command: python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080
     labels:
       - "traefik.http.routers.backend.rule=PathPrefix(`/`)"
@@ -36,7 +36,7 @@ services:
       context: ./db
       dockerfile: ./Dockerfile
     image: etoolsdev/etools-db:dev
-    container_name: etoolsinfra_db
+    container_name: etools_db
     ports:
       - "${DB_PORT:-51322}:5432"
 #    volumes:
@@ -44,7 +44,7 @@ services:
 
   pmp:
     <pmp-image>
-    container_name: etoolsinfra_pmp
+    container_name: etools_pmp
     labels:
       - "traefik.http.routers.pmp.rule=PathPrefix(`/pmp`)"
       - traefik.http.routers.pmp.service=pmp
@@ -58,7 +58,7 @@ services:
 
   dashboard:
     <dashboard-image>
-    container_name: etoolsinfra_dashboard
+    container_name: etools_dashboard
     labels:
       - "traefik.http.routers.dashboard.rule=PathPrefix(`/dash`)"
       - traefik.http.routers.dashboard.service=dashboard
@@ -72,7 +72,7 @@ services:
 
   travel:
     <travel-image>
-    container_name: etoolsinfra_travel
+    container_name: etools_travel
     labels:
       - "traefik.http.routers.travel.rule=PathPrefix(`/t2f`)"
       - traefik.http.routers.travel.service=travel
@@ -86,7 +86,7 @@ services:
 
   ap:
     <ap-image>
-    container_name: etoolsinfra_ap
+    container_name: etools_ap
     labels:
       - "traefik.http.routers.ap.rule=PathPrefix(`/ap`)"
       - traefik.http.routers.ap.service=ap
@@ -101,7 +101,7 @@ services:
 
   psea:
     <psea-image>
-    container_name: etoolsinfra_psea
+    container_name: etools_psea
     labels:
       - "traefik.http.routers.psea.rule=PathPrefix(`/psea`)"
       - traefik.http.routers.psea.service=psea
@@ -116,7 +116,7 @@ services:
 
   tpm:
     <tpm-image>
-    container_name: etoolsinfra_tpm
+    container_name: etools_tpm
     labels:
       - "traefik.http.routers.tpm.rule=PathPrefix(`/tpm`)"
       - traefik.http.routers.tpm.service=tpm
@@ -130,7 +130,7 @@ services:
 
   apd:
     <apd-image>
-    container_name: etoolsinfra_apd
+    container_name: etools_apd
     labels:
       - "traefik.http.routers.apd.rule=PathPrefix(`/apd`)"
       - traefik.http.routers.apd.service=apd
