@@ -1,3 +1,13 @@
 *.pyc
 .idea/
 *.bz2
+ap/
+apd/
+backend/
+dashboard/
+pmp/
+psea/
+tpm/
+travel/
+docker-compose.dev.yml
+docker-compose.dev.yml.bak
