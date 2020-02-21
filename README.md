@@ -110,6 +110,12 @@ this tool has created, run:
     make reallyclean
 ```
 
+To just remove the containers, run:
+
+```bash
+    make remove
+```
+
 That *will* delete all data from the docker environments along with everything
 else, so backup the database first if you need it.
 
