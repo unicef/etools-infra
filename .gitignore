@@ -11,3 +11,4 @@ tpm/
 travel/
 docker-compose.dev.yml
 docker-compose.dev.yml.bak
+config.cfg
