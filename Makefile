@@ -4,6 +4,8 @@ CMD=docker-compose -f docker-compose.dev.yml
 help:
 	@echo ''
 	@echo 'Usage:'
+	@echo '   make update			 update images/repos'
+	@echo '   make docker-compose		 build docker-compose file'
 	@echo '   make reallyclean		 remove docker containers'
 	@echo '   make devup_build		 re/build containers and start'
 	@echo '   make devup			 start containers'
@@ -13,7 +15,9 @@ help:
 	@echo '   make backend_migrations	 run backend migrations'
 	@echo '   make stop			 stop containers'
 	@echo '   make remove			 remove containers'
-	@echo '   make start			 start containers'
+	@echo '   make run			 start containers'
+	@echo '   make build_run		 re/build and start containers'
+	@echo '   make restart SERVICE=<service> restart container'
 	@echo '   make test			 run backend tests'
 	@echo '   make test APP=<app>		 run backend tests for app'
 	@echo ''
@@ -21,6 +25,10 @@ help:
 
 ssh:
 	docker exec -it etools_${SERVICE} /bin/sh
+
+
+restart:
+	${CMD} restart ${SERVICE}
 
 
 reallyclean:
