@@ -88,6 +88,7 @@ test_app:
 
 update:
 	./scripts/update.sh
+	${MAKE} docker-compose
 
 
 docker-compose:

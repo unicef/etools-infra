@@ -23,9 +23,8 @@ in this repo at docs/docker-cheatsheet.md.
 
  - Change to the etools-infra directory: `cd etools-infra`
 
- - Pull necessary images/repos with `make update`
-
- - Generate docker-compose file with `make docker-compose`
+ - Pull necessary images/repos with `make update`, which also builds the
+   docker-compose file.
 
  - Contact the Dev Lead to get your db dump, name it `db1.bz2`
    and add it to: `./db/`.
@@ -102,6 +101,37 @@ Finally, login to localhost:8082/admin/login to finalize setting up your user:
 You should now be able to access frontend apps.
 
 - When you're done working, CTRL-C the `make run` to shutdown the containers.
+
+### Using Repos/Libraries
+
+If you want to work in a particular repo, then edit the `config.cfg` file.
+For example, if we want to pull in the `backend` repo, add the following
+to the file;
+
+```bash
+   backend=repo
+```
+
+And then run the following command;
+
+```bash
+   make update
+```
+
+The repo will be cloned and docker-compose file will be updated.
+You can then start the containers with `make run`
+
+If you want to add backend libraries, it follows a similar flow.
+For example, if we want to develop on the `unicef-notifictions` library,
+add the following to the `config.cfg` file;
+
+```bash
+   lib_notification=true
+```
+
+And then run the subsequent commands `make update`
+Anytime the config file is updated, run the `make update` command
+
 
 ### Clean up/start over
 
