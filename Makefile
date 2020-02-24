@@ -11,13 +11,14 @@ help:
 	@echo '   make devup			 start containers'
 	@echo '   make devup_windows		 start containers on windows'
 	@echo '   make devup_windows_build	 re/build and start on windows'
-	@echo '   make ssh SERVICE=<service>	 ssh into container'
 	@echo '   make backend_migrations	 run backend migrations'
 	@echo '   make stop			 stop containers'
 	@echo '   make remove			 remove containers'
 	@echo '   make run			 start containers'
 	@echo '   make build_run		 re/build and start containers'
+	@echo '   make ssh SERVICE=<service>	 ssh into container'
 	@echo '   make restart SERVICE=<service> restart container'
+	@echo '   make rm SERVICE=<service> 	 rm container'
 	@echo '   make test			 run backend tests'
 	@echo '   make test APP=<app>		 run backend tests for app'
 	@echo ''
@@ -29,6 +30,10 @@ ssh:
 
 restart:
 	${CMD} restart ${SERVICE}
+
+
+rm:
+	${CMD} rm ${SERVICE}
 
 
 reallyclean:
