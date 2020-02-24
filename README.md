@@ -25,6 +25,8 @@ in this repo at docs/docker-cheatsheet.md.
 
  - Pull necessary images/repos with `make update`
 
+ - Generate docker-compose file with `make docker-compose`
+
  - Contact the Dev Lead to get your db dump, name it `db1.bz2`
    and add it to: `./db/`.
    You can copy or hardlink it, just don't use a symbolic link as that

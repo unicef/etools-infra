@@ -1,6 +1,8 @@
 #!/bin/bash
 CONFIG=config.cfg
 CONFIG_DEFAULT=config.cfg.defaults
+PYTHON_LIB_DIR=build/libs/
+LIB_DIR="backend/${PYTHON_LIB_DIR}"
 DOCKER_COMPOSE=docker-compose.dev.yml
 
 config_read_file() {
@@ -37,7 +39,7 @@ cp "./${DOCKER_COMPOSE}" "./${DOCKER_COMPOSE}.bak"
 # copy template to docker-compose.dev.yml
 cp ./templates/docker-compose.dev.tpl.yml "./${DOCKER_COMPOSE}"
 
-
+# APPS
 # if config has 'repo` value, then need to build
 # otherwise use image
 APP_LIST="$(config_read_file config.cfg.defaults "APPS")"
@@ -83,3 +85,29 @@ do
         fi
     fi
 done
+
+
+# LIBS
+# can only set libs pythonpath
+# if any dirs in libs dir
+printf "\n:: checking libraries ::\n\n"
+LIB_LIST="$(config_read_file config.cfg.defaults "LIBS")"
+for i in ${LIB_LIST[*]}
+do
+    LIB_PATH="$(config_read_file config.cfg.defaults "lib_${i}_path")";
+    if [ "${LIB_PATH}" != "__UNDEFINED__" ]; then
+        if [ -d "${LIB_DIR}/${LIB_PATH}" ]; then
+            # library in use, want to set pythonpath
+            printf "using library locally: ${LIB_PATH}\n"
+            replace_text "<pythonpath>" "PYTHONPATH: \${PYTHONPATH}:/code/${PYTHON_LIB_DIR}"
+            break
+        fi
+    fi
+done
+
+printf "\n"
+
+# attempt to clear pythonlib entry
+# if already set then nothing will happen
+# otherwise cleared
+replace_text "<pythonpath>" ""
