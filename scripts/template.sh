@@ -4,6 +4,7 @@ CONFIG_DEFAULT=config.cfg.defaults
 PYTHON_LIB_DIR=build/libs/
 LIB_DIR="backend/${PYTHON_LIB_DIR}"
 DOCKER_COMPOSE=docker-compose.dev.yml
+PYTHON_PATH="PYTHONPATH: \${PYTHONPATH}"
 
 config_read_file() {
     FILE="$(cd "$(dirname "${1}")"; pwd -P)/$(basename "${1}")"
@@ -92,15 +93,16 @@ done
 # if any dirs in libs dir
 printf "\n:: checking libraries ::\n\n"
 LIB_LIST="$(config_read_file config.cfg.defaults "LIBS")"
+EXISTS=false
 for i in ${LIB_LIST[*]}
 do
     LIB_PATH="$(config_read_file config.cfg.defaults "lib_${i}_path")";
     if [ "${LIB_PATH}" != "__UNDEFINED__" ]; then
         if [ -d "${LIB_DIR}/${LIB_PATH}" ]; then
             # library in use, want to set pythonpath
+            EXISTS=true
             printf "using library locally: ${LIB_PATH}\n"
-            replace_text "<pythonpath>" "PYTHONPATH: \${PYTHONPATH}:/code/${PYTHON_LIB_DIR}"
-            break
+            PYTHON_PATH="${PYTHON_PATH}:/code/${PYTHON_LIB_DIR}${LIB_PATH}/src"
         fi
     fi
 done
@@ -110,4 +112,8 @@ printf "\n"
 # attempt to clear pythonlib entry
 # if already set then nothing will happen
 # otherwise cleared
-replace_text "<pythonpath>" ""
+if [ "${EXISTS}" = true ]; then
+    replace_text "<pythonpath>" "${PYTHON_PATH}"
+else
+    replace_text "<pythonpath>" ""
+fi
