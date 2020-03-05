@@ -109,9 +109,7 @@ done
 
 printf "\n"
 
-# attempt to clear pythonlib entry
-# if already set then nothing will happen
-# otherwise cleared
+
 if [ "${EXISTS}" = true ]; then
     replace_text "<pythonpath>" "${PYTHON_PATH}"
 else
