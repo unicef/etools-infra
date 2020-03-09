@@ -40,8 +40,8 @@ services:
     container_name: etools_db
     ports:
       - "${DB_PORT:-51322}:5432"
-#    volumes:
-#      - './postgres_data:/var/lib/postgresql/data'
+    volumes:
+      - "./db:/db"
 
   pmp:
     <pmp-image>

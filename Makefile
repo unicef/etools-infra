@@ -21,6 +21,7 @@ help:
 	@echo '   make rm SERVICE=<service> 	 rm container'
 	@echo '   make test			 run backend tests'
 	@echo '   make test APP=<app>		 run backend tests for app'
+	@echo '   make restore FILE=<file>       restore DB with provided file'
 	@echo ''
 
 
@@ -58,7 +59,7 @@ devup_windows_build:
 
 
 backend_migrations:
-	${CMD} exec backend python /code/manage.py migrate_schemas --noinput
+	${CMD} run backend -w /code python manage.py migrate_schemas --noinput
 
 
 stop:
@@ -79,7 +80,7 @@ build_run:
 
 
 test:
-	${CMD} exec backend python /code/core/manage.py test --keepdb
+	${CMD} run backend -w /code python manage.py test --keepdb
 
 
 test_app:
@@ -93,3 +94,7 @@ update:
 
 docker-compose:
 	./scripts/template.sh
+
+
+restore:
+	./scripts/restore_db.sh
