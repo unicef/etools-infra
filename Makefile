@@ -59,7 +59,7 @@ devup_windows_build:
 
 
 backend_migrations:
-	${CMD} run backend -w /code python manage.py migrate_schemas --noinput
+	${CMD} run backend python manage.py migrate_schemas --noinput
 
 
 stop:
@@ -80,7 +80,7 @@ build_run:
 
 
 test:
-	${CMD} run backend -w /code python manage.py test --keepdb
+	${CMD} run backend python manage.py test --keepdb
 
 
 test_app:
