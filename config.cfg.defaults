@@ -1,0 +1,52 @@
+APPS=ap apd backend dashboard pmp psea tpm travel
+LIBS=locations validator attachments djangolib notification restlib snapshot rest_export
+
+# apps
+backend_image=unicef/etools:7.7
+backend_repo=git@github.com:unicef/etools
+
+pmp_image=unicef/etools-pmp:7.7
+pmp_repo=git@github.com:unicef/etools-partnership-management
+
+travel_image=unicef/etools-t2f:7.7
+travel_repo=git@github.com:unicef/etools-t2f
+
+dashboard_image=unicef/etools-dashboard:7.7.1
+dashboad_repo=git@github.com:unicef/etools-dashboard
+
+ap_image=unicef/etools-ap:7.7
+ap_repo=git@github.com:unicef/etools-auditor-portal.git
+
+tpm_image=unicef/etools-tpm:7.7
+tpm_repo=git@github.com:unicef/etools-tpm.git
+
+apd_image=unicef/etools-action-points:7.7
+apd_repo=git@github.com:unicef/etools-action-points.git
+
+psea_image=unicef/etools-psea:7.7
+psea_repo=git@github.com:unicef/etools-psea.git
+
+# libs
+lib_locations_repo=git@github.com:unicef/unicef-locations.git
+lib_locations_path=unicef_locations
+
+lib_validator_repo=git@github.com:unicef/etools-validator.git
+lib_validator_path=etools_validator
+
+lib_attachments_repo=git@github.com:unicef/unicef-attachments.git
+lib_attachments_path=unicef_attachments
+
+lib_djangolib_repo=git@github.com:unicef/unicef-djangolib.git
+lib_djangolib_path=unicef_djangolib
+
+lib_notification_repo=git@github.com:unicef/unicef-notification.git
+lib_notification_path=unicef_notification
+
+lib_restlib_repo=git@github.com:unicef/unicef-restlib.git
+lib_restlib_path=unicef_restlib
+
+lib_snapshot_repo=git@github.com:unicef/unicef-snapshot.git
+lib_snapshot_path=unicef_snapshot
+
+lib_rest_export_repo=git@github.com:unicef/unicef-rest-export.git
+lib_rest_export_path=unicef_rest_export
