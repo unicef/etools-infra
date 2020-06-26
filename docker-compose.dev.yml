@@ -130,6 +130,23 @@ services:
       - "/code/build"
     command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
 
+  epd:
+    build:
+      context: ./epd
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-epd:dev
+    container_name: etoolsinfra_epd
+    labels:
+      - traefik.backend=epd
+      - traefik.frontend.rule=PathPrefixStrip:/epd/
+      - traefik.priority=10
+      - traefik.enable=true
+      - traefik.port=8080
+    volumes:
+      - "./epd:/code"
+      - "/code/build"
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+
   tpm:
     build:
       context: ./tpm

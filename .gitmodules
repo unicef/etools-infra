@@ -34,3 +34,7 @@
 	path = psea
 	url = git@github.com:unicef/etools-psea.git
 	branch = develop
+[submodule "epd"]
+	path = epd
+	url = git@github.com:unicef/etools-epd.git
+	branch = master
