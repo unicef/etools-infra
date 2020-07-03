@@ -145,7 +145,7 @@ services:
     volumes:
       - "./epd:/code"
       - "/code/build"
-    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+    command: ${FE_COMMAND:-sh -c "npm run start"}
 
   tpm:
     build:
