@@ -9,7 +9,7 @@
 [submodule "proxy"]
 	path = proxy
 	url = git@github.com:unicef/etools-nginx-proxy
-	branch = develop
+	branch = master
 [submodule "backend"]
 	path = backend
 	url = git@github.com:unicef/etools
