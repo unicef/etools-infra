@@ -2,3 +2,4 @@
 .idea/
 *.bz2
 .envrc
+.venv/
