@@ -44,9 +44,9 @@ services:
     image: etoolsdev/etools-db:dev
     container_name: etoolsinfra_db
     ports:
-      - "${DB_PORT:-51322}:5432"
-#    volumes:
-#      - './postgres_data:/var/lib/postgresql/data'
+      - "65432:5432"
+    environment:
+      DB_DUMP_LOCATION: /tmp/psql_data/db1.bz2
 
   pmp:
     build:
