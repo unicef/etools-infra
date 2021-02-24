@@ -40,7 +40,8 @@ GRANT ALL PRIVILEGES ON DATABASE etools TO etoolusr;
 EOSQL
 
 echo "*** UPDATING DATABASE ***"
-bzcat $DB_DUMP_LOCATION | nice pg_restore -U etoolusr -F t -d etools
+bzcat $DB_DUMP_LOCATION | nice pg_restore --verbose  -U etoolusr -F t -d etools
+# bzcat $DB_DUMP_LOCATION | nice pg_restore --verbose  -U etoolusr -F c -d etools
 
 echo "*** DATABASE CREATED! ***"
 
