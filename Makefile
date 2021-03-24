@@ -35,8 +35,12 @@ init:
 	@docker-compose -f docker-compose.dev.yml up --force-recreate --build
 
 
-devup:
+build:
 	@docker-compose -f docker-compose.dev.yml up --force-recreate
+
+
+devup:
+	@docker-compose -f docker-compose.dev.yml up
 
 
 clean:
