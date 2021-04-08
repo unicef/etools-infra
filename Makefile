@@ -1,6 +1,11 @@
 BUILDDIR=build
 PATTERN=etools
 
+DOCKER_CONTAINERS=$(shell docker ps -a -f "name=${PATTERN}")
+DOCKER_IMAGES=$(shell docker images|grep '${PATTERN}')
+DOCKER = docker
+
+
 help:
 	@echo '                                                                               '
 	@echo 'Usage:                                                                         '
@@ -35,8 +40,12 @@ init:
 	@docker-compose -f docker-compose.dev.yml up --force-recreate --build
 
 
-devup:
+build:
 	@docker-compose -f docker-compose.dev.yml up --force-recreate
+
+
+devup:
+	@docker-compose -f docker-compose.dev.yml up
 
 
 clean:
