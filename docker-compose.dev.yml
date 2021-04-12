@@ -46,7 +46,7 @@ services:
     ports:
       - "65432:5432"
     environment:
-      DB_DUMP_LOCATION: /tmp/psql_data/db1.bz2
+        POSTGRES_HOST_AUTH_METHOD: trust
 
   pmp:
     build:
