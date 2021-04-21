@@ -1,13 +1,165 @@
-version: '2'
+version: '2.1'
 
 services:
-  nginx_proxy:
-    image: unicef/etools-proxy:latest
+  proxy:
+    image: traefik:v1.7
+    command: --api --docker
     ports:
-      - "8080:80"
+      - "8082:80"
+      - "8080:8080"
+    container_name: etoolsinfra_proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  backend:
+    environment:
+      DEBUG_IP: ${DEBUG_IP:-"10.0.2.2"}
+      DEBUG_PORT: ${DEBUG_PORT:-51312}
+      DATABASE_URL: postgis://etoolusr:@db:5432/etools
+      DJANGO_SETTINGS_MODULE: etools.config.settings.local
+      PYCHARM_DEBUG: 1
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile-dev
+      args:
+        REQUIREMENTS_FILE: test.txt
+    image: etoolsdev/etools-backend:dev
+    container_name: etoolsinfra_backend
+    command: python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080
+    labels:
+      - traefik.backend=backend
+      - traefik.frontend.rule=PathPrefix:/
+      - traefik.priority=1
+      - traefik.enable=true
+      - traefik.port=8080
+    volumes:
+      - "./backend:/code"
     depends_on:
-      - django
-      - polymer_pmp
+      - db
+    stdin_open: true
+    tty: true
 
   db:
-    image: postgres:9.5
+    build:
+      context: ./db
+      dockerfile: ./Dockerfile
+    image: etoolsdev/etools-db:dev
+    container_name: etoolsinfra_db
+    ports:
+      - "65432:5432"
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  pmp:
+    build:
+      context: ./pmp
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-pmp:dev
+    container_name: etoolsinfra_pmp
+    labels:
+      - traefik.backend=pmp
+      - traefik.frontend.rule=PathPrefixStrip:/pmp/
+      - traefik.priority=10
+      - traefik.enable=true
+      - traefik.port=8080
+    volumes:
+      - "./pmp:/code"
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-dashboard:dev
+    container_name: etoolsinfra_dashboard
+    labels:
+      - traefik.backend=dashboard
+      - traefik.frontend.rule=PathPrefixStrip:/dash/
+      - traefik.priority=10
+      - traefik.enable=true
+      - traefik.port=8080
+    volumes:
+      - "./dashboard:/code"
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+
+  travel:
+    build:
+      context: ./travel
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-travel:dev
+    container_name: etoolsinfra_travel
+    labels:
+      - traefik.backend=travel
+      - traefik.frontend.rule=PathPrefixStrip:/t2f/
+      - traefik.priority=10
+      - traefik.enable=true
+      - traefik.port=8080
+    volumes:
+      - "./travel:/code"
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+
+  ap:
+    build:
+      context: ./ap
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-ap:dev
+    container_name: etoolsinfra_ap
+    labels:
+      - traefik.backend=ap
+      - traefik.frontend.rule=PathPrefixStrip:/ap/
+      - traefik.priority=10
+      - traefik.enable=true
+      - traefik.port=8080
+    volumes:
+      - "./ap:/code"
+      - "/code/build"
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+
+  psea:
+    build:
+      context: ./psea
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-psea:dev
+    container_name: etoolsinfra_psea
+    labels:
+      - traefik.backend=psea
+      - traefik.frontend.rule=PathPrefixStrip:/psea/
+      - traefik.priority=10
+      - traefik.enable=true
+      - traefik.port=8080
+    volumes:
+      - "./psea:/code"
+      - "/code/build"
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+
+  tpm:
+    build:
+      context: ./tpm
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-tpm:dev
+    container_name: etoolsinfra_tpm
+    labels:
+      - traefik.backend=tpm
+      - traefik.frontend.rule=PathPrefixStrip:/tpm/
+      - traefik.priority=10
+      - traefik.enable=true
+      - traefik.port=8080
+    volumes:
+      - "./tpm:/code"
+      - "/code/build"
+
+  apd:
+    build:
+      context: ./apd
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-action-points:dev
+    container_name: etoolsinfra_apd
+    labels:
+      - traefik.backend=apd
+      - traefik.frontend.rule=PathPrefixStrip:/apd/
+      - traefik.priority=10
+      - traefik.enable=true
+      - traefik.port=8080
+    volumes:
+      - "./apd:/code"
+    command: ${FE_COMMAND:-sh -c "npm run start"}
