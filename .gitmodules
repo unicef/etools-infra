@@ -34,3 +34,6 @@
 	path = psea
 	url = git@github.com:unicef/etools-psea.git
 	branch = develop
+[submodule "fm"]
+	path = fm
+	url = git@github.com:unicef/etools-fm-fe.git

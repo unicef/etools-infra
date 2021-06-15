@@ -37,15 +37,15 @@ migrations:
 
 
 init:
-	@docker-compose -f docker-compose.dev.yml up --force-recreate --build
+	@docker-compose up --force-recreate --build
 
 
 build:
-	@docker-compose -f docker-compose.dev.yml up --force-recreate
+	@docker-compose up --force-recreate
 
 
 devup:
-	@docker-compose -f docker-compose.dev.yml up
+	@docker-compose up
 
 
 clean:
