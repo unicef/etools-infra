@@ -30,3 +30,11 @@
 	path = backend
 	url = https://github.com/unicef/etools.git
 	branch = develop
+[submodule "pmp"]
+	path = pmp
+	url = https://github.com/unicef/etools-partnership-management.git
+	branch = develop
+[submodule "epd"]
+	path = epd
+	url = https://github.com/unicef/etools-epd.git
+	branch = develop
