@@ -1,4 +1,32 @@
+[submodule "dashboard"]
+	path = dashboard
+	url = https://github.com/unicef/etools.git
+	branch = develop
+[submodule "ap"]
+	path = ap
+	url = https://github.com/unicef/etools-auditor-portal.git
+	branch = develop
+[submodule "tpm"]
+	path = tpm
+	url = https://github.com/unicef/etools-tpm.git
+	branch = develop
+[submodule "apd"]
+	path = apd
+	url = https://github.com/unicef/etools-action-points.git
+	branch = develop
+[submodule "psea"]
+	path = psea
+	url = https://github.com/unicef/etools-psea.git
+	branch = develop
+[submodule "travel"]
+	path = travel
+	url = https://github.com/unicef/etools-t2f.git
+	branch = develop
 [submodule "fm"]
 	path = fm
 	url = https://github.com/unicef/etools-fm-fe.git
+	branch = develop
+[submodule "backend"]
+	path = backend
+	url = https://github.com/unicef/etools.git
 	branch = develop
