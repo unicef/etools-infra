@@ -1,3 +1,7 @@
 *.pyc
 .idea/
 *.bz2
+.venv/
+.envrc
+Pipfile
+Pipfile.lock

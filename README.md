@@ -18,7 +18,7 @@ in this repo at docs/docker-cheatsheet.md.
 
 ### Dependencies
 
-- [Python 3.7](https://www.python.org/downloads/)
+- [Python 3.9](https://www.python.org/downloads/)
 - [Virtualenv](https://virtualenv.pypa.io/en/stable/)
 - [Virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/)
 - [Docker](https://www.docker.com/)
@@ -30,7 +30,7 @@ in this repo at docs/docker-cheatsheet.md.
 
  - Clone the repo: `git clone git@github.com:unicef/etools-infra.git`
 
- - Setup a virtualenv: `mkvirtualenv -p $(type -p python3.7) --no-site-packages etools`
+ - Setup a virtualenv: `mkvirtualenv -p $(type -p python3.9) --no-site-packages etools`
 
  - Install fabric: `pip install fabric3`
 
