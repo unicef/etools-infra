@@ -14,39 +14,39 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-#  backend:
-#    environment:
-#      DEBUG_IP: ${DEBUG_IP:-"10.0.2.2"}
-#      DEBUG_PORT: ${DEBUG_PORT:-51312}
-#      DATABASE_URL: postgis://etoolusr:@db:5432/etools
-#      DJANGO_SETTINGS_MODULE: etools.config.settings.local
-#      PYCHARM_DEBUG: 1
-#    build:
-#      context: ./backend
-#      dockerfile: ./Dockerfile-dev
-#    image: etoolsdev/etools-backend:dev
-#    container_name: etoolsinfra_backend
-#    command: python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080
-#    labels:
-#      traefik.http.routers.backend.rule: PathPrefix(`/`)
-#      traefik.http.services.backend.loadBalancer.server.port: 8080
-#    volumes:
-#      - "./backend:/code"
-#    depends_on:
-#      - db
-
   backend:
     environment:
+      DEBUG_IP: ${DEBUG_IP:-"10.0.2.2"}
+      DEBUG_PORT: ${DEBUG_PORT:-51312}
       DATABASE_URL: postgis://etoolusr:@db:5432/etools
       DJANGO_SETTINGS_MODULE: etools.config.settings.local
-    container_name: etools_backend
-    image: unicef/etools:develop
-    command: python /code/manage.py runserver 0.0.0.0:8080
+      PYCHARM_DEBUG: 1
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-backend:dev
+    container_name: etoolsinfra_backend
+    command: python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080
     labels:
       traefik.http.routers.backend.rule: PathPrefix(`/`)
       traefik.http.services.backend.loadBalancer.server.port: 8080
+    volumes:
+      - "./backend:/code"
     depends_on:
       - db
+#
+#  backend:
+#    environment:
+#      DATABASE_URL: postgis://etoolusr:@db:5432/etools
+#      DJANGO_SETTINGS_MODULE: etools.config.settings.local
+#    container_name: etools_backend
+#    image: unicef/etools:develop
+#    command: python /code/manage.py runserver 0.0.0.0:8080
+#    labels:
+#      traefik.http.routers.backend.rule: PathPrefix(`/`)
+#      traefik.http.services.backend.loadBalancer.server.port: 8080
+#    depends_on:
+#      - db
 
   db:
     build:
@@ -227,8 +227,8 @@ services:
     image: unicef/etools-field-monitoring:develop
     command: node express.js
     labels:
-      traefik.http.routers.apd.rule: PathPrefix(`/fm/`)
-      traefik.http.services.apd.loadBalancer.server.port: 8080
+      traefik.http.routers.fm.rule: PathPrefix(`/fm/`)
+      traefik.http.services.fm.loadBalancer.server.port: 8080
 
 #  fm:
 #    build:
