@@ -1,7 +1,3 @@
-[submodule "dashboard"]
-	path = dashboard
-	url = https://github.com/unicef/etools.git
-	branch = develop
 [submodule "ap"]
 	path = ap
 	url = https://github.com/unicef/etools-auditor-portal.git
@@ -37,4 +33,16 @@
 [submodule "epd"]
 	path = epd
 	url = https://github.com/unicef/etools-epd.git
+	branch = develop
+[submodule "dash"]
+	path = dash
+	url = https://github.com/unicef/etools-dashboard.git
+	branch = develop
+[submodule "menu"]
+	path = menu
+	url = https://github.com/unicef/etools-menu.git
+	branch = develop
+[submodule "manage"]
+	path = manage
+	url = https://github.com/unicef/etools-manage.git
 	branch = develop

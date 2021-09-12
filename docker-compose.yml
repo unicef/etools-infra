@@ -16,6 +16,37 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+  db:
+    build:
+      context: ./db
+      dockerfile: ./Dockerfile
+    image: etoolsdev/etools-db:dev
+    container_name: etoolsinfra_db
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  dbepd:
+    build:
+      context: ./db
+      dockerfile: ./Dockerfile
+    image: etoolsdev/etools-db:devepd
+    container_name: etoolsinfra_dbepd
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+#
+#  backend:
+#    environment:
+#      DATABASE_URL: postgis://etoolusr:@db:5432/etools
+#      DJANGO_SETTINGS_MODULE: etools.config.settings.local
+#    container_name: etools_backend
+#    image: unicef/etools:develop
+#    command: python /code/manage.py runserver 0.0.0.0:8080
+#    labels:
+#      traefik.http.routers.backend.rule: PathPrefix(`/`)
+#      traefik.http.services.backend.loadBalancer.server.port: 8080
+#    depends_on:
+#      - db
 
   backend:
     environment:
@@ -41,37 +72,6 @@ services:
     command: python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080
 #    depends_on:
 #      - db
-#
-#  backend:
-#    environment:
-#      DATABASE_URL: postgis://etoolusr:@db:5432/etools
-#      DJANGO_SETTINGS_MODULE: etools.config.settings.local
-#    container_name: etools_backend
-#    image: unicef/etools:develop
-#    command: python /code/manage.py runserver 0.0.0.0:8080
-#    labels:
-#      traefik.http.routers.backend.rule: PathPrefix(`/`)
-#      traefik.http.services.backend.loadBalancer.server.port: 8080
-#    depends_on:
-#      - db
-
-  db:
-    build:
-      context: ./db
-      dockerfile: ./Dockerfile
-    image: etoolsdev/etools-db:dev
-    container_name: etoolsinfra_db
-    environment:
-      POSTGRES_HOST_AUTH_METHOD: trust
-
-  dbepd:
-    build:
-      context: ./db
-      dockerfile: ./Dockerfile
-    image: etoolsdev/etools-db:devepd
-    container_name: etoolsinfra_dbepd
-    environment:
-      POSTGRES_HOST_AUTH_METHOD: trust
 
   pmp:
     container_name: etools_pmp
@@ -106,7 +106,7 @@ services:
     image: unicef/etools-dashboard:develop
     container_name: etools_dashboard
     labels:
-      - traefik.http.routers.dash.rule=PathPrefix(`/dash`) && Host(`etools.localhost`)
+      - traefik.http.routers.dash.rule=PathPrefix(`/dash/`) && Host(`etools.localhost`)
       - traefik.http.services.dash.loadBalancer.server.port=8080
       - traefik.http.routers.dash.service=dash
       - traefik.enable=true
@@ -115,12 +115,12 @@ services:
 
 #  dash:
 #    build:
-#      context: ./dashboard
+#      context: ./dash
 #      dockerfile: ./Dockerfile-dev
 #    image: etoolsdev/etools-dashboard:dev
 #    container_name: etools_dash_local
 #    labels:
-#      - traefik.http.routers.dash.rule=PathPrefix(`/dash`) && Host(`etools.localhost`)
+#      - traefik.http.routers.dash.rule=PathPrefix(`/dash/`) && Host(`etools.localhost`)
 #      - traefik.http.routers.dash.middlewares=dash-stripprefix
 #      - traefik.http.middlewares.dash-stripprefix.stripprefix.prefixes=/dash/
 #      - traefik.http.services.dash.loadBalancer.server.port=8080
@@ -128,7 +128,7 @@ services:
 #      - traefik.enable=true
 #      - project.label=etools
 #    volumes:
-#      - "./dashboard:/code"
+#      - "./dash:/code"
 #    command: ${FE_COMMAND:-sh -c "npm start"}
 
 
@@ -144,6 +144,7 @@ services:
     command: node express.js
 
 
+# The local version might no longer work - module will be replaced soon
 #  t2f:
 #    build:
 #      context: ./travel
@@ -180,7 +181,7 @@ services:
 #    image: etoolsdev/etools-ap:dev
 #    container_name: etools_ap_local
 #    labels:
-#      - traefik.http.routers.ap.rule=PathPrefix(`/ap`) && Host(`etools.localhost`)
+#      - traefik.http.routers.ap.rule=PathPrefix(`/ap/`) && Host(`etools.localhost`)
 #      - traefik.http.routers.ap.middlewares=ap-stripprefix
 #      - traefik.http.middlewares.ap-stripprefix.stripprefix.prefixes=/ap/
 #      - traefik.http.services.ap.loadBalancer.server.port=8080
@@ -231,6 +232,8 @@ services:
       - traefik.enable=true
       - project.label=etools
 
+
+# packages need to be updated
 #  tpm:
 #    build:
 #      context: ./tpm
@@ -248,8 +251,6 @@ services:
 #    volumes:
 #      - "./tpm:/code"
 #    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
-
-
 
 
   apd:
@@ -280,7 +281,7 @@ services:
 #    volumes:
 #      - "./apd:/code"
 #    command: ${FE_COMMAND:-sh -c "npm start"}
-
+#
   epd:
     container_name: etools_epd
     image: unicef/etools-epd:develop
@@ -315,7 +316,7 @@ services:
     image: unicef/etools-field-monitoring:develop
     command: node express.js
     labels:
-      - traefik.http.routers.fm.rule=PathPrefix(`/fm`) && Host(`etools.localhost`)
+      - traefik.http.routers.fm.rule=PathPrefix(`/fm/`) && Host(`etools.localhost`)
       - traefik.http.services.fm.loadBalancer.server.port=8080
       - traefik.http.routers.fm.service=fm
       - traefik.enable=true
@@ -328,7 +329,7 @@ services:
 #    image: etoolsdev/etools-fm:dev
 #    container_name: etools_fm_local
 #    labels:
-#      - traefik.http.routers.fm.rule=PathPrefix(`/fm`) && Host(`etools.localhost`)
+#      - traefik.http.routers.fm.rule=PathPrefix(`/fm/`) && Host(`etools.localhost`)
 #      - traefik.http.routers.fm.middlewares=fm-stripprefix
 #      - traefik.http.middlewares.fm-stripprefix.stripprefix.prefixes=/fm/
 #      - traefik.http.services.fm.loadBalancer.server.port=8080
@@ -338,4 +339,62 @@ services:
 #    volumes:
 #      - "./fm:/code"
 #    command: ${FE_COMMAND:-sh -c "npm start"}
+
+  menu:
+    image: unicef/etools-menu:develop
+    container_name: etools_menu
+    labels:
+      - traefik.http.routers.menu.rule=PathPrefix(`/menu`) && Host(`etools.localhost`)
+      - traefik.http.services.menu.loadBalancer.server.port=8080
+      - traefik.http.routers.menu.service=menu
+      - traefik.enable=true
+      - project.label=etools
+    command: node express.js
+
+#  menu:
+#    build:
+#      context: ./menu
+#      dockerfile: ./Dockerfile-dev
+#    image: etoolsdev/etools-menu:dev
+#    container_name: etools_menu_local
+#    labels:
+#      - traefik.http.routers.menu.rule=PathPrefix(`/menu/`) && Host(`etools.localhost`)
+#      - traefik.http.routers.menu.middlewares=dash-stripprefix
+#      - traefik.http.middlewares.menu-stripprefix.stripprefix.prefixes=/menu/
+#      - traefik.http.services.menu.loadBalancer.server.port=8080
+#      - traefik.http.routers.menu.service=menu
+#      - traefik.enable=true
+#      - project.label=etools
+#    volumes:
+#      - "./menu:/code"
+#    command: ${FE_COMMAND:-sh -c "npm start"}
+
+  manage:
+    image: unicef/etools-manage:develop
+    container_name: etools_manage
+    labels:
+      - traefik.http.routers.manage.rule=PathPrefix(`/manage`) && Host(`etools.localhost`)
+      - traefik.http.services.manage.loadBalancer.server.port=8080
+      - traefik.http.routers.manage.service=manage
+      - traefik.enable=true
+      - project.label=etools
+    command: node server.js
+
+#    manage:
+#      build:
+#        context: ./manage
+#        dockerfile: ./Dockerfile-dev
+#      image: etoolsdev/etools-manage:dev
+#      container_name: etools_manage_local
+#      labels:
+#        - traefik.http.routers.manage.rule=PathPrefix(`/menu/`) && Host(`etools.localhost`)
+#        - traefik.http.routers.manage.middlewares=manage-stripprefix
+#        - traefik.http.middlewares.manage-stripprefix.stripprefix.prefixes=/manage/
+#        - traefik.http.services.manage.loadBalancer.server.port=8080
+#        - traefik.http.routers.manage.service=manage
+#        - traefik.enable=true
+#        - project.label=etools
+#      volumes:
+#        - "./menu:/code"
+#      command: ${FE_COMMAND:-sh -c "npm start"}
 
