@@ -5,3 +5,5 @@
 .envrc
 Pipfile
 Pipfile.lock
+/pythonlibs/*
+*postgres_data*
