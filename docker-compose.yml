@@ -1,7 +1,7 @@
 version: '3.8'
 
 volumes:
-  etools-pg-data: {}
+  pg-data: {}
 
 services:
   proxy:
@@ -25,7 +25,10 @@ services:
     image: etoolsdev/etools-db:dev
     container_name: etoolsinfra_db
     volumes:
-      - etools-pg-data:/var/lib/postgresql/data/
+      - pg-data:/var/lib/postgresql/data/
+      - ${PWD}/db/db1.bz2:/tmp/psql_data/db1.bz2
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
     restart: unless-stopped
