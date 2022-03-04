@@ -43,6 +43,13 @@ in this repo at docs/docker-cheatsheet.md.
  - Contact the Dev Lead to get your db dump, name it `db1.bz2` and add it to: `./db/`.
    You can copy or hardlink it, just don't use a symbolic link as that doesn't
    seem to work.
+ - For running only specific services - one or multiple, use
+ 
+    ``` docker-compose -f docker-compose.yml up <service_name1> [<service_name2>] ```
+
+    e.g. Run only tpm, backend and the db:
+
+    ``` docker-compose -f docker-compose.yml up tpm backend db```
 
  - Run: `fab devup` in the parent folder and wait for it. This should restore the database to the db container.
 
@@ -71,24 +78,25 @@ in this repo at docs/docker-cheatsheet.md.
 
  - To SSH into a web container `fab ssh:backend` (to run `manage.py createsuperuser` or other commands)
 
- - The database container should be accesible on the host machine on port 51322. The port can be changed by passing it as a parameter to the `fab devup` commands.
+ - The database container should be accessible on the host machine on port 51322. The port can be changed by passing it as a parameter to the `fab devup` commands.
 
  ```bash
 	fab ssh:backend
 	# create super user (choose public schema when asked)
 	python manage.py createsuperuser
 
-	# run schema migrations
-	python manage.py migrate_schemas --noinput --schema=public
-
 	# open python shell and reduce the number of countries. (This gets rid of all but a few countries.)
-	python manage.py shell
-	from EquiTrack.util_scripts import *
+	python manage.py shell_plus
 	local_country_keep()
-	quit()
 
-	# run migrations scripts
+
+	# run migrations for a specific or multiple schema/tenant/country :
+	python manage.py migrate_schemas --noinput --schema=public
+	python manage.py migrate_schemas --noinput --schema=ukraine,...,
+
+	# run migrations for all schemas
 	python manage.py migrate_schemas --noinput
+
 
 	# import currencies data
 	python manage.py import_exchange_rates
@@ -134,11 +142,24 @@ You can also run `fab update:quick` which will only pull code changes and not up
 ### Dev Setup on Windows 10 requirements
 
  - Enable Hyper-V (PowerShell opened with Administrator rights: `Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All`)
- - Install Docker for Windows, stable channel: https://docs.docker.com/docker-for-windows/install/#download-docker-for-windows
+ - Install Docker Desktop for Windows: https://docs.docker.com/desktop/windows/install/
  - Open Docker Settings and add your shared partitions (the one that contains the folder you are gonna install etools)
- - Install [Python 3.7](https://www.python.org/downloads/) and [update your system environment `Path` variable](https://docs.python.org/3/using/windows.html#finding-the-python-executable)
+ - Install [Python 3.9](https://www.python.org/downloads/) and [update your system environment `Path` variable](https://docs.python.org/3/using/windows.html#finding-the-python-executable)
  - Open GitBash/CMD/PowerShell and run `pip install fabric3`
  - Do `Dev Setup` steps to install the project
+ 
+
+### Dev Setup on Windows >= 10 with WSL (WSL2 is preferred):
+- Make sure you have WSL enabled meaning that in ```Turn Windows features on or off```, “Windows Subsystem for Linux” is checked
+- in CMD/PowerShell, install a linux kernel and the default linux distro(ubuntu):
+    ```
+    wsl --install
+  ```
+    
+    More about WSL [here.](https://docs.microsoft.com/en-us/windows/wsl/install)
+- Install Docker Desktop for Windows: https://docs.docker.com/desktop/windows/install/
+- Do `Dev Setup` steps to install the project
+
 
 ### Docker help
 
