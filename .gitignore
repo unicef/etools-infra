@@ -7,3 +7,17 @@ Pipfile
 Pipfile.lock
 /pythonlibs/*
 *postgres_data*
+
+ap/*
+apd/*
+backend/*
+dash/*
+epd/*
+fm/*
+manage/*
+menu/*
+pmp/*
+psea/*
+tpm/*
+travel/*
+travel2/*
