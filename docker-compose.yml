@@ -1,5 +1,7 @@
 version: '3.8'
 
+volumes:
+  pg-data: {}
 
 services:
   proxy:
@@ -22,8 +24,14 @@ services:
       dockerfile: ./Dockerfile
     image: etoolsdev/etools-db:dev
     container_name: etoolsinfra_db
+    volumes:
+      - pg-data:/var/lib/postgresql/data/
+      - ${PWD}/db/db1.bz2:/tmp/psql_data/db1.bz2
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
+    restart: unless-stopped
 
 #  dbepd:
 #    build:
@@ -74,8 +82,8 @@ services:
       - "./backend:/code"
 #      - "./pythonlibs:/pythonlibs"
     command: python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080
-#    depends_on:
-#      - db
+    depends_on:
+      - db
 #
 #  pmp:
 #    container_name: etools_pmp
