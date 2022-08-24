@@ -1,5 +1,7 @@
 version: '3.8'
 
+volumes:
+  pg-data: {}
 
 services:
   proxy:
@@ -22,8 +24,14 @@ services:
       dockerfile: ./Dockerfile
     image: etoolsdev/etools-db:dev
     container_name: etoolsinfra_db
+    volumes:
+      - pg-data:/var/lib/postgresql/data/
+      - ${PWD}/db/db1.bz2:/tmp/psql_data/db1.bz2
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
+    restart: unless-stopped
 
 #  dbepd:
 #    build:
@@ -49,10 +57,13 @@ services:
 #      - db
 
   backend:
+    security_opt:
+      - seccomp:unconfined
     environment:
       DEBUG_IP: ${DEBUG_IP:-"10.0.2.2"}
       DEBUG_PORT: ${DEBUG_PORT:-51312}
       DATABASE_URL: postgis://etoolusr:@db:5432/etools
+#      PYTHONPATH: /pythonlibs/external:/pythonlibs/unicef-vison/src:/code
 #      DATABASE_URL: postgis://etoolusr:@dbepd:5432/etools
       DJANGO_SETTINGS_MODULE: etools.config.settings.local
       PYCHARM_DEBUG: 1
@@ -69,67 +80,79 @@ services:
       - project.label=etools
     volumes:
       - "./backend:/code"
+#      - "./pythonlibs:/pythonlibs"
     command: python /code/manage${BACKEND_DEBUG}.py runserver 0.0.0.0:8080
-#    depends_on:
-#      - db
-
-  pmp:
-    container_name: etools_pmp
-    image: unicef/etools-pmp:develop
-    command: node express.js
-    labels:
-      - traefik.http.routers.pmp.rule=PathPrefix(`/pmp`) && Host(`etools.localhost`)
-      - traefik.http.services.pmp.loadBalancer.server.port=8080
-      - traefik.http.routers.pmp.service=pmp
-      - traefik.enable=true
-      - project.label=etools
-
+    depends_on:
+      - db
+#
 #  pmp:
-#    build:
-#      context: ./pmp
-#      dockerfile: ./Dockerfile-dev
-#    image: etoolsdev/etools-pmp:dev
-#    container_name: etools_pmp_local
+#    container_name: etools_pmp
+#    image: unicef/etools-pmp:develop
+#    command: node express.js
 #    labels:
-#      - traefik.http.routers.pmp.rule=PathPrefix(`/pmp`) && Host(`etools.localhost`)
-#      - traefik.http.routers.pmp.middlewares=pmp-stripprefix
-#      - traefik.http.middlewares.pmp-stripprefix.stripprefix.prefixes=/pmp/
+#      - traefik.http.routers.pmp.rule=PathPrefix(`/pmp/`) && Host(`etools.localhost`)
 #      - traefik.http.services.pmp.loadBalancer.server.port=8080
 #      - traefik.http.routers.pmp.service=pmp
 #      - traefik.enable=true
 #      - project.label=etools
-#    volumes:
-#      - "./pmp:/code"
-#    command: ${FE_COMMAND:-sh -c "npm start"}
 
-  dash:
-    image: unicef/etools-dashboard:develop
-    container_name: etools_dashboard
+#  pmp:
+#    container_name: etools_pmpepd
+#    image: unicef/etools-pmp:epd
+#    command: node express.js
+#    labels:
+#      - traefik.http.routers.pmp.rule=PathPrefix(`/pmp/`) && Host(`etools.localhost`)
+#      - traefik.http.services.pmp.loadBalancer.server.port=8080
+#      - traefik.http.routers.pmp.service=pmp
+#      - traefik.enable=true
+#      - project.label=etools
+
+  pmp:
+    build:
+      context: ./pmp
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-pmp:dev
+    container_name: etools_pmp_local
     labels:
-      - traefik.http.routers.dash.rule=PathPrefix(`/dash/`) && Host(`etools.localhost`)
-      - traefik.http.services.dash.loadBalancer.server.port=8080
-      - traefik.http.routers.dash.service=dash
+      - traefik.http.routers.pmp.rule=PathPrefix(`/pmp/`) && Host(`etools.localhost`)
+      - traefik.http.routers.pmp.middlewares=pmp-stripprefix
+      - traefik.http.middlewares.pmp-stripprefix.stripprefix.prefixes=/pmp/
+      - traefik.http.services.pmp.loadBalancer.server.port=8080
+      - traefik.http.routers.pmp.service=pmp
       - traefik.enable=true
       - project.label=etools
-    command: node express.js
+    volumes:
+      - "./pmp:/code"
+    command: ${FE_COMMAND:-sh -c "npm start"}
 
 #  dash:
-#    build:
-#      context: ./dash
-#      dockerfile: ./Dockerfile-dev
-#    image: etoolsdev/etools-dashboard:dev
-#    container_name: etools_dash_local
+#    image: unicef/etools-dashboard:develop
+#    container_name: etools_dashboard
 #    labels:
 #      - traefik.http.routers.dash.rule=PathPrefix(`/dash/`) && Host(`etools.localhost`)
-#      - traefik.http.routers.dash.middlewares=dash-stripprefix
-#      - traefik.http.middlewares.dash-stripprefix.stripprefix.prefixes=/dash/
 #      - traefik.http.services.dash.loadBalancer.server.port=8080
 #      - traefik.http.routers.dash.service=dash
 #      - traefik.enable=true
 #      - project.label=etools
-#    volumes:
-#      - "./dash:/code"
-#    command: ${FE_COMMAND:-sh -c "npm start"}
+#    command: node express.js
+
+  dash:
+    build:
+      context: ./dash
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-dashboard:dev
+    container_name: etools_dash_local
+    labels:
+      - traefik.http.routers.dash.rule=PathPrefix(`/dash/`) && Host(`etools.localhost`)
+      - traefik.http.routers.dash.middlewares=dash-stripprefix
+      - traefik.http.middlewares.dash-stripprefix.stripprefix.prefixes=/dash/
+      - traefik.http.services.dash.loadBalancer.server.port=8080
+      - traefik.http.routers.dash.service=dash
+      - traefik.enable=true
+      - project.label=etools
+    volumes:
+      - "./dash:/code"
+    command: ${FE_COMMAND:-sh -c "npm start"}
 
 
   t2f:
@@ -163,238 +186,238 @@ services:
 #      - "./travel:/code"
 #    command:  ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
 
-  ap:
-    container_name: etools_ap
-    image: unicef/etools-ap:develop
-    command: node express.js
-    labels:
-      - traefik.http.routers.ap.rule=PathPrefix(`/ap/`) && Host(`etools.localhost`)
-      - traefik.http.services.ap.loadBalancer.server.port=8080
-      - traefik.http.routers.ap.service=ap
-      - traefik.enable=true
-      - project.label=etools
-
 #  ap:
-#    build:
-#      context: ./ap
-#      dockerfile: ./Dockerfile-dev
-#    image: etoolsdev/etools-ap:dev
-#    container_name: etools_ap_local
+#    container_name: etools_ap
+#    image: unicef/etools-ap:develop
+#    command: node express.js
 #    labels:
 #      - traefik.http.routers.ap.rule=PathPrefix(`/ap/`) && Host(`etools.localhost`)
-#      - traefik.http.routers.ap.middlewares=ap-stripprefix
-#      - traefik.http.middlewares.ap-stripprefix.stripprefix.prefixes=/ap/
 #      - traefik.http.services.ap.loadBalancer.server.port=8080
 #      - traefik.http.routers.ap.service=ap
 #      - traefik.enable=true
 #      - project.label=etools
-#    volumes:
-#      - "./ap:/code"
-#    command: ${FE_COMMAND:-sh -c "npm start"}
 
-  psea:
-    container_name: etools_psea
-    image: unicef/etools-psea:develop
-    command: node express.js
+  ap:
+    build:
+      context: ./ap
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-ap:dev
+    container_name: etools_ap_local
     labels:
-      - traefik.http.routers.psea.rule=PathPrefix(`/psea`) && Host(`etools.localhost`)
-      - traefik.http.services.psea.loadBalancer.server.port=8080
-      - traefik.http.routers.psea.service=psea
+      - traefik.http.routers.ap.rule=PathPrefix(`/ap/`) && Host(`etools.localhost`)
+      - traefik.http.routers.ap.middlewares=ap-stripprefix
+      - traefik.http.middlewares.ap-stripprefix.stripprefix.prefixes=/ap/
+      - traefik.http.services.ap.loadBalancer.server.port=8080
+      - traefik.http.routers.ap.service=ap
       - traefik.enable=true
       - project.label=etools
+    volumes:
+      - "./ap:/code"
+    command: ${FE_COMMAND:-sh -c "npm start"}
 
 #  psea:
-#    build:
-#      context: ./psea
-#      dockerfile: ./Dockerfile-dev
-#    image: etoolsdev/etools-psea:dev
-#    container_name: etools_psea_local
+#    container_name: etools_psea
+#    image: unicef/etools-psea:develop
+#    command: node express.js
 #    labels:
-#      - traefik.http.routers.psea.rule=PathPrefix(`/psea`) && Host(`etools.localhost`)
-#      - traefik.http.routers.psea.middlewares=psea-stripprefix
-#      - traefik.http.middlewares.psea-stripprefix.stripprefix.prefixes=/psea/
+#      - traefik.http.routers.psea.rule=PathPrefix(`/psea/`) && Host(`etools.localhost`)
 #      - traefik.http.services.psea.loadBalancer.server.port=8080
 #      - traefik.http.routers.psea.service=psea
 #      - traefik.enable=true
 #      - project.label=etools
-#    volumes:
-#      - "./psea:/code"
-#    command: ${FE_COMMAND:-sh -c "npm start"}
 
-  tpm:
-    container_name: etools_tpm
-    image: unicef/etools-tpm:develop
-    command: node express.js
+  psea:
+    build:
+      context: ./psea
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-psea:dev
+    container_name: etools_psea_local
     labels:
-      - traefik.http.routers.tpm.rule=PathPrefix(`/tpm`) && Host(`etools.localhost`)
-      - traefik.http.services.tpm.loadBalancer.server.port=8080
-      - traefik.http.routers.tpm.service=tpm
+      - traefik.http.routers.psea.rule=PathPrefix(`/psea/`) && Host(`etools.localhost`)
+      - traefik.http.routers.psea.middlewares=psea-stripprefix
+      - traefik.http.middlewares.psea-stripprefix.stripprefix.prefixes=/psea/
+      - traefik.http.services.psea.loadBalancer.server.port=8080
+      - traefik.http.routers.psea.service=psea
       - traefik.enable=true
       - project.label=etools
+    volumes:
+      - "./psea:/code"
+    command: ${FE_COMMAND:-sh -c "npm start"}
 
-
-# packages need to be updated
 #  tpm:
-#    build:
-#      context: ./tpm
-#      dockerfile: ./Dockerfile-dev
-#    image: etoolsdev/etools-tpm:dev
-#    container_name: etools_tpm_local
+#    container_name: etools_tpm
+#    image: unicef/etools-tpm:develop
+#    command: node express.js
 #    labels:
 #      - traefik.http.routers.tpm.rule=PathPrefix(`/tpm`) && Host(`etools.localhost`)
-#      - traefik.http.routers.tpm.middlewares=tpm-stripprefix
-#      - traefik.http.middlewares.tpm-stripprefix.stripprefix.prefixes=/tpm/
 #      - traefik.http.services.tpm.loadBalancer.server.port=8080
 #      - traefik.http.routers.tpm.service=tpm
 #      - traefik.enable=true
 #      - project.label=etools
-#    volumes:
-#      - "./tpm:/code"
-#    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
 
 
-  apd:
-    container_name: etools_apd
-    image: unicef/etools-action-points:develop
-    command: node express.js
+# packages need to be updated
+  tpm:
+    build:
+      context: ./tpm
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-tpm:dev
+    container_name: etools_tpm_local
     labels:
-      - traefik.http.routers.apd.rule=PathPrefix(`/apd`) && Host(`etools.localhost`)
-      - traefik.http.services.apd.loadBalancer.server.port=8080
-      - traefik.http.routers.apd.service=apd
+      - traefik.http.routers.tpm.rule=PathPrefix(`/tpm/`) && Host(`etools.localhost`)
+      - traefik.http.routers.tpm.middlewares=tpm-stripprefix
+      - traefik.http.middlewares.tpm-stripprefix.stripprefix.prefixes=/tpm/
+      - traefik.http.services.tpm.loadBalancer.server.port=8080
+      - traefik.http.routers.tpm.service=tpm
       - traefik.enable=true
       - project.label=etools
+    volumes:
+      - "./tpm:/code"
+    command: ${FE_COMMAND:-sh -c "polymer serve -H 0.0.0.0 -p 8080"}
+
 
 #  apd:
-#    build:
-#      context: ./apd
-#      dockerfile: ./Dockerfile-dev
-#    image: etoolsdev/etools-apd:dev
-#    container_name: etools_apd_local
+#    container_name: etools_apd
+#    image: unicef/etools-action-points:develop
+#    command: node express.js
 #    labels:
-#      - traefik.http.routers.apd.rule=PathPrefix(`/apd`) && Host(`etools.localhost`)
-#      - traefik.http.routers.apd.middlewares=apd-stripprefix
-#      - traefik.http.middlewares.apd-stripprefix.stripprefix.prefixes=/apd/
+#      - traefik.http.routers.apd.rule=PathPrefix(`/apd/`) && Host(`etools.localhost`)
 #      - traefik.http.services.apd.loadBalancer.server.port=8080
 #      - traefik.http.routers.apd.service=apd
 #      - traefik.enable=true
 #      - project.label=etools
-#    volumes:
-#      - "./apd:/code"
-#    command: ${FE_COMMAND:-sh -c "npm start"}
-#
-  epd:
-    container_name: etools_epd
-    image: unicef/etools-epd:develop
-    command: node express.js
+
+  apd:
+    build:
+      context: ./apd
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-apd:dev
+    container_name: etools_apd_local
     labels:
-      - traefik.http.routers.epd.rule=PathPrefix(`/epd`) && Host(`etools.localhost`)
-      - traefik.http.services.epd.loadBalancer.server.port=8080
-      - traefik.http.routers.epd.service=epd
+      - traefik.http.routers.apd.rule=PathPrefix(`/apd/`) && Host(`etools.localhost`)
+      - traefik.http.routers.apd.middlewares=apd-stripprefix
+      - traefik.http.middlewares.apd-stripprefix.stripprefix.prefixes=/apd/
+      - traefik.http.services.apd.loadBalancer.server.port=8080
+      - traefik.http.routers.apd.service=apd
       - traefik.enable=true
       - project.label=etools
-
+    volumes:
+      - "./apd:/code"
+    command: ${FE_COMMAND:-sh -c "npm start"}
+#
 #  epd:
-#    build:
-#      context: ./epd
-#      dockerfile: ./Dockerfile-dev
-#    image: etoolsdev/etools-epd:dev
-#    container_name: etools_epd_local
+#    container_name: etools_epd
+#    image: unicef/etools-epd:develop
+#    command: node express.js
 #    labels:
-#      - traefik.http.routers.epd.rule=PathPrefix(`/epd`) && Host(`etools.localhost`)
-#      - traefik.http.routers.epd.middlewares=epd-stripprefix
-#      - traefik.http.middlewares.epd-stripprefix.stripprefix.prefixes=/epd/
+#      - traefik.http.routers.epd.rule=PathPrefix(`/epd/`) && Host(`etools.localhost`)
 #      - traefik.http.services.epd.loadBalancer.server.port=8080
 #      - traefik.http.routers.epd.service=epd
 #      - traefik.enable=true
 #      - project.label=etools
-#    volumes:
-#      - "./epd:/code"
-#    command: ${FE_COMMAND:-sh -c "npm start"}
-#
-  fm:
-    container_name: etools_fm
-    image: unicef/etools-field-monitoring:develop
-    command: node express.js
+
+  epd:
+    build:
+      context: ./epd
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-epd:dev
+    container_name: etools_epd_local
     labels:
-      - traefik.http.routers.fm.rule=PathPrefix(`/fm/`) && Host(`etools.localhost`)
-      - traefik.http.services.fm.loadBalancer.server.port=8080
-      - traefik.http.routers.fm.service=fm
+      - traefik.http.routers.epd.rule=PathPrefix(`/epd/`) && Host(`etools.localhost`)
+      - traefik.http.routers.epd.middlewares=epd-stripprefix
+      - traefik.http.middlewares.epd-stripprefix.stripprefix.prefixes=/epd/
+      - traefik.http.services.epd.loadBalancer.server.port=8080
+      - traefik.http.routers.epd.service=epd
       - traefik.enable=true
       - project.label=etools
-
+    volumes:
+      - "./epd:/code"
+    command: ${FE_COMMAND:-sh -c "npm start"}
+#
 #  fm:
-#    build:
-#      context: ./fm
-#      dockerfile: ./Dockerfile-dev
-#    image: etoolsdev/etools-fm:dev
-#    container_name: etools_fm_local
+#    container_name: etools_fm
+#    image: unicef/etools-field-monitoring:develop
+#    command: node express.js
 #    labels:
 #      - traefik.http.routers.fm.rule=PathPrefix(`/fm/`) && Host(`etools.localhost`)
-#      - traefik.http.routers.fm.middlewares=fm-stripprefix
-#      - traefik.http.middlewares.fm-stripprefix.stripprefix.prefixes=/fm/
 #      - traefik.http.services.fm.loadBalancer.server.port=8080
 #      - traefik.http.routers.fm.service=fm
 #      - traefik.enable=true
 #      - project.label=etools
-#    volumes:
-#      - "./fm:/code"
-#    command: ${FE_COMMAND:-sh -c "npm start"}
 
-  menu:
-    image: unicef/etools-menu:develop
-    container_name: etools_menu
+  fm:
+    build:
+      context: ./fm
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-fm:dev
+    container_name: etools_fm_local
     labels:
-      - traefik.http.routers.menu.rule=PathPrefix(`/menu`) && Host(`etools.localhost`)
-      - traefik.http.services.menu.loadBalancer.server.port=8080
-      - traefik.http.routers.menu.service=menu
+      - traefik.http.routers.fm.rule=PathPrefix(`/fm/`) && Host(`etools.localhost`)
+      - traefik.http.routers.fm.middlewares=fm-stripprefix
+      - traefik.http.middlewares.fm-stripprefix.stripprefix.prefixes=/fm/
+      - traefik.http.services.fm.loadBalancer.server.port=8080
+      - traefik.http.routers.fm.service=fm
       - traefik.enable=true
       - project.label=etools
-    command: node express.js
+    volumes:
+      - "./fm:/code"
+    command: ${FE_COMMAND:-sh -c "npm start"}
 
 #  menu:
-#    build:
-#      context: ./menu
-#      dockerfile: ./Dockerfile-dev
-#    image: etoolsdev/etools-menu:dev
-#    container_name: etools_menu_local
+#    image: unicef/etools-menu:develop
+#    container_name: etools_menu
 #    labels:
-#      - traefik.http.routers.menu.rule=PathPrefix(`/menu/`) && Host(`etools.localhost`)
-#      - traefik.http.routers.menu.middlewares=dash-stripprefix
-#      - traefik.http.middlewares.menu-stripprefix.stripprefix.prefixes=/menu/
+#      - traefik.http.routers.menu.rule=PathPrefix(`/menu`) && Host(`etools.localhost`)
 #      - traefik.http.services.menu.loadBalancer.server.port=8080
 #      - traefik.http.routers.menu.service=menu
 #      - traefik.enable=true
 #      - project.label=etools
-#    volumes:
-#      - "./menu:/code"
-#    command: ${FE_COMMAND:-sh -c "npm start"}
+#    command: node express.js
+
+  menu:
+    build:
+      context: ./menu
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-menu:dev
+    container_name: etools_menu_local
+    labels:
+      - traefik.http.routers.menu.rule=PathPrefix(`/menu/`) && Host(`etools.localhost`)
+      - traefik.http.routers.menu.middlewares=menu-stripprefix
+      - traefik.http.middlewares.menu-stripprefix.stripprefix.prefixes=/menu/
+      - traefik.http.services.menu.loadBalancer.server.port=8080
+      - traefik.http.routers.menu.service=menu
+      - traefik.enable=true
+      - project.label=etools
+    volumes:
+      - "./menu:/code"
+    command: ${FE_COMMAND:-sh -c "npm start"}
+
+#  manage:
+#    image: unicef/etools-manage:develop
+#    container_name: etools_manage
+#    labels:
+#      - traefik.http.routers.manage.rule=PathPrefix(`/manage/`) && Host(`etools.localhost`)
+#      - traefik.http.services.manage.loadBalancer.server.port=8080
+#      - traefik.http.routers.manage.service=manage
+#      - traefik.enable=true
+#      - project.label=etools
+#    command: node server.js
 
   manage:
-    image: unicef/etools-manage:develop
-    container_name: etools_manage
+    build:
+      context: ./manage
+      dockerfile: ./Dockerfile-dev
+    image: etoolsdev/etools-manage:dev
+    container_name: etools_manage_local
     labels:
-      - traefik.http.routers.manage.rule=PathPrefix(`/manage`) && Host(`etools.localhost`)
+      - traefik.http.routers.manage.rule=PathPrefix(`/manage/`) && Host(`etools.localhost`)
+      - traefik.http.routers.manage.middlewares=manage-stripprefix
+      - traefik.http.middlewares.manage-stripprefix.stripprefix.prefixes=/manage/
       - traefik.http.services.manage.loadBalancer.server.port=8080
       - traefik.http.routers.manage.service=manage
       - traefik.enable=true
       - project.label=etools
-    command: node server.js
-
-#    manage:
-#      build:
-#        context: ./manage
-#        dockerfile: ./Dockerfile-dev
-#      image: etoolsdev/etools-manage:dev
-#      container_name: etools_manage_local
-#      labels:
-#        - traefik.http.routers.manage.rule=PathPrefix(`/menu/`) && Host(`etools.localhost`)
-#        - traefik.http.routers.manage.middlewares=manage-stripprefix
-#        - traefik.http.middlewares.manage-stripprefix.stripprefix.prefixes=/manage/
-#        - traefik.http.services.manage.loadBalancer.server.port=8080
-#        - traefik.http.routers.manage.service=manage
-#        - traefik.enable=true
-#        - project.label=etools
-#      volumes:
-#        - "./menu:/code"
-#      command: ${FE_COMMAND:-sh -c "npm start"}
-
+    volumes:
+      - "./manage:/code"
+      - "/code/build/"
+    command: ${FE_COMMAND:-sh -c "npm start"}

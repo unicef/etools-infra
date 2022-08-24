@@ -5,12 +5,18 @@ from fabric.context_managers import shell_env, lcd
 
 
 APP_SUBMODULE_DIRECTORIES = (
-    'dashboard',
-    'pmp',
-    'travel',
     'ap',
     'apd',
+    'backend',
+    'dash',
+    'epd',
+    'fm',
+    'manage',
+    'menu',
+    'pmp',
+    'psea',
     'tpm',
+    'travel',
 )
 
 
