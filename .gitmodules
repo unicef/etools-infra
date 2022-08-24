@@ -1,60 +1,60 @@
 [submodule "ap"]
 	path = ap
-	url = https://github.com/unicef/etools-auditor-portal.git
+	url = ../etools-auditor-portal.git
 	branch = develop
 	ignore = all
 [submodule "tpm"]
 	path = tpm
-	url = https://github.com/unicef/etools-tpm.git
+	url = ../etools-tpm.git
 	branch = develop
 	ignore = all
 [submodule "apd"]
 	path = apd
-	url = https://github.com/unicef/etools-action-points.git
+	url = ../etools-action-points.git
 	branch = develop
 	ignore = all
 [submodule "psea"]
 	path = psea
-	url = https://github.com/unicef/etools-psea.git
+	url = ../etools-psea.git
 	branch = develop
 	ignore = all
 [submodule "travel"]
 	path = travel
-	url = https://github.com/unicef/etools-t2f.git
+	url = ../etools-t2f.git
 	branch = develop
 	ignore = all
 [submodule "fm"]
 	path = fm
-	url = https://github.com/unicef/etools-fm-fe.git
+	url = ../etools-fm-fe.git
 	branch = develop
 	ignore = all
 [submodule "backend"]
 	path = backend
-	url = https://github.com/unicef/etools.git
+	url = ../etools.git
 	branch = develop
 	ignore = all
 [submodule "pmp"]
 	path = pmp
-	url = https://github.com/unicef/etools-partnership-management.git
+	url = ../etools-partnership-management.git
 	branch = develop
 	ignore = all
 [submodule "epd"]
 	path = epd
-	url = https://github.com/unicef/etools-epd.git
+	url = ../etools-epd.git
 	branch = develop
     ignore = all
 [submodule "dash"]
 	path = dash
-	url = https://github.com/unicef/etools-dashboard.git
+	url = ../etools-dashboard.git
 	branch = develop
 	ignore = all
 [submodule "menu"]
 	path = menu
-	url = https://github.com/unicef/etools-menu.git
+	url = ../etools-menu.git
 	branch = develop
 	ignore = all
 [submodule "manage"]
 	path = manage
-	url = https://github.com/unicef/etools-manage.git
+	url = ../etools-manage.git
 	branch = develop
 	ignore = all
